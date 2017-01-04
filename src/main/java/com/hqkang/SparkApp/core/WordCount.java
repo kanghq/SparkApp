@@ -1,24 +1,28 @@
 package com.hqkang.SparkApp.core;
 
 
-import java.util.Arrays;
-import java.util.Date;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.List;
 
-import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.PairFunction;
-import org.datasyslab.geospark.spatialRDD.PointRDD;
+import org.apache.spark.api.java.function.FilterFunction;
+import org.apache.spark.api.java.function.ForeachFunction;
+import org.apache.spark.api.java.function.PairFlatMapFunction;
+import org.apache.spark.api.java.function.VoidFunction;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 
+import scala.Function1;
 import scala.Tuple2;
-
 
 public class WordCount {
 	
@@ -26,77 +30,72 @@ public class WordCount {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
-		SparkConf conf = new SparkConf().setMaster("local").setAppName("wordCount");
-		JavaSparkContext sc = new JavaSparkContext(conf);
+		
+		SparkSession spark = SparkSession.builder().master("local").appName("wordCount").getOrCreate();
+		//spark.conf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+		//spark.conf().set("spark.kryo.registrator", "MyRegistrator");
+		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
 		// Load our input data.
 		String fileName  = "20081023025304.plt";
-		JavaRDD<String> input = sc.textFile(fileName);
-		// Split up into words.
-
+		String queryFile = "20081023025304.plt";
+		JavaPairRDD<String, MBRList> mbrRDD =  Helper.importFromFile(fileName, sc);
 		
-		JavaRDD<String> inputData = input.mapPartitionsWithIndex(	//remove header
-		new Function2<Integer, Iterator<String>, Iterator<String>>() {
 
-			public Iterator<String> call(Integer ind, Iterator<String> iterator) throws Exception {
-				// 
+	
+		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = Helper.store2DB(mbrRDD);
+
+		databaseRDD.foreach(new VoidFunction<Tuple2<Tuple2<Integer,String>,MBR>>() {
+
+			
+
+			@Override
+			public void call(Tuple2<Tuple2<Integer, String>, MBR> t) throws Exception {				// TODO Auto-generated method stub
+				System.out.println(t._1+ "----" +t._2);
 				
-				while(ind<=5 && iterator.hasNext()) {
-					iterator.next();
-					ind++;
-					
-				} 
-				return iterator;
-					
 			}
-		}, false);
-		JavaPairRDD<String,Point> points = inputData.mapToPair(
-				new PairFunction<String, String, Point>() {
 
-					public Tuple2<String, Point> call(String line) throws Exception {
-						String[] parts = line.split(",");
-						String lat = parts[0];
-						String lon = parts[1];
-						String sDate = parts[5];
-						Date   date;
-						String sTime = parts[6];
-						Date time;
-						Point pt = new Point(sDate, sTime, lat, lon);
-						return new Tuple2(fileName, pt); 
-						
-					}
-					
-				});
-		// Transform into pairs and count.
 		
-		JavaPairRDD<String, LinkedList<Point>> pointsList = null;
-		JavaPairRDD<String, MBRList> mbrRDD = pointsList.mapToPair(
-				new PairFunction<Tuple2<String, LinkedList<Point>>, String, MBRList>() {
+				
+			});
+		databaseRDD.count(); 
 
-					public Tuple2<String, MBRList> call(Tuple2<String, LinkedList<Point>> t) throws Exception {
-						int k = 20;
-						MBRList mbrPriList = new MBRList();
-					
-						String fileNmae = t._1();
-					
-						Iterator ite = t._2().iterator();
-						
-						while(ite.hasNext()) {
-							Point point = (Point)ite.next();
-							mbrPriList.add(new MBR(point, point));
-						}
-						
-						while(mbrPriList.size() > k) {
-						TreeMap<Integer, Double> priQueue = mbrPriList.calculatePotentialMergeCost();
-						mbrPriList.mergeNextOne(priQueue.firstKey().intValue());
-						}
-						
-						return new Tuple2(fileNmae,mbrPriList);
-					}
-					
-				}
-				);
+		JavaPairRDD<String, MBRList> queRDD =  Helper.importFromFile(queryFile, sc);
 		
+		JavaPairRDD<Tuple2, MBR> queryRDD = Helper.toTupleKey(queRDD);
 		
+		Dataset<Row> databaseDF = spark.createDataFrame(databaseRDD.values(),MBR.class);
+		Dataset<Row> queryDF = spark.createDataFrame(queryRDD.values(), MBR.class);
+		
+		Dataset<Row> joinDF = databaseDF.join(queryDF, "seq");
+				/*.filter(new FilterFunction<Row>() {
+
+			@Override
+			public boolean call(Row r) throws Exception {
+				// TODO Auto-generated method stub
+				System.out.println(r.schema());
+				System.out.println(r);
+
+				return false;
+			}
+			
+		}).count();
+		*/
+		
+		joinDF.foreach(new ForeachFunction<Row>() {
+
+			
+
+		
+			@Override
+			public void call(Row t) throws Exception {
+				// TODO Auto-generated method stub
+				System.out.println(t.schema());
+				System.out.println(t);
+			}
+
+		
+				
+			});
 		
 		
 		

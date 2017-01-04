@@ -1,0 +1,295 @@
+2017-01-01 22:27:39.630+0000 WARN  [o.n.i.p.PageCache] The dbms.memory.pagecache.size setting has not been configured. It is recommended that this setting is always explicitly configured, to ensure the system has a balanced configuration. Until then, a computed heuristic value of 3340500992 bytes will be used instead. 
+2017-01-01 22:27:42.341+0000 INFO  [o.n.k.i.f.CommunityEditionModule] No locking implementation specified, defaulting to 'community'
+2017-01-01 22:27:43.666+0000 INFO  [o.n.k.AvailabilityGuard] Requirement makes database unavailable: Database available
+2017-01-01 22:27:43.864+0000 INFO  [o.n.k.i.DiagnosticsManager] --- INITIALIZED diagnostics START ---
+2017-01-01 22:27:43.864+0000 INFO  [o.n.k.i.DiagnosticsManager] Neo4j Kernel properties:
+2017-01-01 22:27:43.865+0000 INFO  [o.n.k.i.DiagnosticsManager] unsupported.dbms.edition=community
+2017-01-01 22:27:43.866+0000 INFO  [o.n.k.i.DiagnosticsManager] unsupported.dbms.directories.neo4j_home=/Users/kanghuaqiang/git/SparkApp/.
+2017-01-01 22:27:43.866+0000 INFO  [o.n.k.i.DiagnosticsManager] unsupported.dbms.ephemeral=false
+2017-01-01 22:27:43.867+0000 INFO  [o.n.k.i.DiagnosticsManager] Diagnostics providers:
+2017-01-01 22:27:43.867+0000 INFO  [o.n.k.i.DiagnosticsManager] org.neo4j.kernel.configuration.Config
+2017-01-01 22:27:43.867+0000 INFO  [o.n.k.i.DiagnosticsManager] org.neo4j.kernel.info.DiagnosticsManager
+2017-01-01 22:27:43.867+0000 INFO  [o.n.k.i.DiagnosticsManager] SYSTEM_MEMORY
+2017-01-01 22:27:43.868+0000 INFO  [o.n.k.i.DiagnosticsManager] JAVA_MEMORY
+2017-01-01 22:27:43.868+0000 INFO  [o.n.k.i.DiagnosticsManager] OPERATING_SYSTEM
+2017-01-01 22:27:43.868+0000 INFO  [o.n.k.i.DiagnosticsManager] JAVA_VIRTUAL_MACHINE
+2017-01-01 22:27:43.869+0000 INFO  [o.n.k.i.DiagnosticsManager] CLASSPATH
+2017-01-01 22:27:43.869+0000 INFO  [o.n.k.i.DiagnosticsManager] LIBRARY_PATH
+2017-01-01 22:27:43.869+0000 INFO  [o.n.k.i.DiagnosticsManager] SYSTEM_PROPERTIES
+2017-01-01 22:27:43.870+0000 INFO  [o.n.k.i.DiagnosticsManager] NETWORK
+2017-01-01 22:27:43.870+0000 INFO  [o.n.k.i.DiagnosticsManager] System memory information:
+2017-01-01 22:27:43.877+0000 INFO  [o.n.k.i.DiagnosticsManager] Total Physical memory: 8.00 GB
+2017-01-01 22:27:43.878+0000 INFO  [o.n.k.i.DiagnosticsManager] Free Physical memory: 98.03 MB
+2017-01-01 22:27:43.879+0000 INFO  [o.n.k.i.DiagnosticsManager] Committed virtual memory: 5.87 GB
+2017-01-01 22:27:43.880+0000 INFO  [o.n.k.i.DiagnosticsManager] Total swap space: 6.00 GB
+2017-01-01 22:27:43.881+0000 INFO  [o.n.k.i.DiagnosticsManager] Free swap space: 943.00 MB
+2017-01-01 22:27:43.881+0000 INFO  [o.n.k.i.DiagnosticsManager] JVM memory information:
+2017-01-01 22:27:43.885+0000 INFO  [o.n.k.i.DiagnosticsManager] Free  memory: 94.73 MB
+2017-01-01 22:27:43.886+0000 INFO  [o.n.k.i.DiagnosticsManager] Total memory: 157.00 MB
+2017-01-01 22:27:43.888+0000 INFO  [o.n.k.i.DiagnosticsManager] Max   memory: 1.78 GB
+2017-01-01 22:27:43.889+0000 INFO  [o.n.k.i.DiagnosticsManager] Garbage Collector: PS Scavenge: [PS Eden Space, PS Survivor Space]
+2017-01-01 22:27:43.890+0000 INFO  [o.n.k.i.DiagnosticsManager] Garbage Collector: PS MarkSweep: [PS Eden Space, PS Survivor Space, PS Old Gen]
+2017-01-01 22:27:43.894+0000 INFO  [o.n.k.i.DiagnosticsManager] Memory Pool: Code Cache (Non-heap memory): committed=5.69 MB, used=5.61 MB, max=240.00 MB, threshold=0.00 B
+2017-01-01 22:27:43.897+0000 INFO  [o.n.k.i.DiagnosticsManager] Memory Pool: Metaspace (Non-heap memory): committed=36.46 MB, used=35.64 MB, max=-1.00 B, threshold=0.00 B
+2017-01-01 22:27:43.900+0000 INFO  [o.n.k.i.DiagnosticsManager] Memory Pool: Compressed Class Space (Non-heap memory): committed=5.71 MB, used=5.45 MB, max=1.00 GB, threshold=0.00 B
+2017-01-01 22:27:43.902+0000 INFO  [o.n.k.i.DiagnosticsManager] Memory Pool: PS Eden Space (Heap memory): committed=61.50 MB, used=53.32 MB, max=670.00 MB, threshold=?
+2017-01-01 22:27:43.904+0000 INFO  [o.n.k.i.DiagnosticsManager] Memory Pool: PS Survivor Space (Heap memory): committed=6.00 MB, used=0.00 B, max=6.00 MB, threshold=?
+2017-01-01 22:27:43.907+0000 INFO  [o.n.k.i.DiagnosticsManager] Memory Pool: PS Old Gen (Heap memory): committed=89.50 MB, used=8.95 MB, max=1.33 GB, threshold=0.00 B
+2017-01-01 22:27:43.907+0000 INFO  [o.n.k.i.DiagnosticsManager] Operating system information:
+2017-01-01 22:27:43.908+0000 INFO  [o.n.k.i.DiagnosticsManager] Operating System: Mac OS X; version: 10.10.5; arch: x86_64; cpus: 4
+2017-01-01 22:27:43.909+0000 INFO  [o.n.k.i.DiagnosticsManager] Max number of file descriptors: 10240
+2017-01-01 22:27:43.910+0000 INFO  [o.n.k.i.DiagnosticsManager] Number of open file descriptors: 228
+2017-01-01 22:27:43.911+0000 INFO  [o.n.k.i.DiagnosticsManager] Process id: 8722@KangHuaqiangs-MacBook-Air.local
+2017-01-01 22:27:43.912+0000 INFO  [o.n.k.i.DiagnosticsManager] Byte order: LITTLE_ENDIAN
+2017-01-01 22:27:43.912+0000 INFO  [o.n.k.i.DiagnosticsManager] Local timezone: America/Montreal
+2017-01-01 22:27:43.912+0000 INFO  [o.n.k.i.DiagnosticsManager] JVM information:
+2017-01-01 22:27:43.913+0000 INFO  [o.n.k.i.DiagnosticsManager] VM Name: Java HotSpot(TM) 64-Bit Server VM
+2017-01-01 22:27:43.913+0000 INFO  [o.n.k.i.DiagnosticsManager] VM Vendor: Oracle Corporation
+2017-01-01 22:27:43.913+0000 INFO  [o.n.k.i.DiagnosticsManager] VM Version: 25.91-b14
+2017-01-01 22:27:43.914+0000 INFO  [o.n.k.i.DiagnosticsManager] JIT compiler: HotSpot 64-Bit Tiered Compilers
+2017-01-01 22:27:43.915+0000 INFO  [o.n.k.i.DiagnosticsManager] VM Arguments: [-agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:50748, -Dfile.encoding=UTF-8]
+2017-01-01 22:27:43.915+0000 INFO  [o.n.k.i.DiagnosticsManager] Java classpath:
+2017-01-01 22:27:43.985+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/slf4j/slf4j-api/1.7.16/slf4j-api-1.7.16.jar
+2017-01-01 22:27:43.986+0000 INFO  [o.n.k.i.DiagnosticsManager]  [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/charsets.jar
+2017-01-01 22:27:43.986+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/commons/commons-math3/3.4.1/commons-math3-3.4.1.jar
+2017-01-01 22:27:43.986+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-primitive-collections/3.1.0/neo4j-primitive-collections-3.1.0.jar
+2017-01-01 22:27:43.987+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/fasterxml/jackson/module/jackson-module-scala_2.10/2.6.5/jackson-module-scala_2.10-2.6.5.jar
+2017-01-01 22:27:43.987+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/univocity/univocity-parsers/2.2.1/univocity-parsers-2.2.1.jar
+2017-01-01 22:27:43.987+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/jgridshift/jgridshift/1.0/jgridshift-1.0.jar
+2017-01-01 22:27:43.987+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-process/9.2/gt-process-9.2.jar
+2017-01-01 22:27:43.988+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/avro/avro-ipc/1.7.7/avro-ipc-1.7.7.jar
+2017-01-01 22:27:43.988+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-cql/9.2/gt-cql-9.2.jar
+2017-01-01 22:27:43.988+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/commons/commons-math/2.1/commons-math-2.1.jar
+2017-01-01 22:27:43.989+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-main/9.2/gt-main-9.2.jar
+2017-01-01 22:27:43.989+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/xbean/xbean-asm5-shaded/4.4/xbean-asm5-shaded-4.4.jar
+2017-01-01 22:27:43.989+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-data/9.2/gt-data-9.2.jar
+2017-01-01 22:27:43.990+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/ning/compress-lzf/1.0.3/compress-lzf-1.0.3.jar
+2017-01-01 22:27:43.990+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-network-shuffle_2.10/2.1.0/spark-network-shuffle_2.10-2.1.0.jar
+2017-01-01 22:27:43.990+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/esotericsoftware/minlog/1.3.0/minlog-1.3.0.jar
+2017-01-01 22:27:43.991+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-shuffle/2.2.0/hadoop-mapreduce-client-shuffle-2.2.0.jar
+2017-01-01 22:27:43.991+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/curator/curator-recipes/2.4.0/curator-recipes-2.4.0.jar
+2017-01-01 22:27:43.991+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/hk2/external/javax.inject/2.4.0-b34/javax.inject-2.4.0-b34.jar
+2017-01-01 22:27:43.992+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/json4s/json4s-ast_2.10/3.2.11/json4s-ast_2.10-3.2.11.jar
+2017-01-01 22:27:43.992+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/net/sf/py4j/py4j/0.10.4/py4j-0.10.4.jar
+2017-01-01 22:27:43.992+0000 INFO  [o.n.k.i.DiagnosticsManager]  [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/sunrsasign.jar
+2017-01-01 22:27:43.992+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/jersey/containers/jersey-container-servlet-core/2.22.2/jersey-container-servlet-core-2.22.2.jar
+2017-01-01 22:27:43.993+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-catalyst_2.10/2.1.0/spark-catalyst_2.10-2.1.0.jar
+2017-01-01 22:27:43.993+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-hdfs/2.2.0/hadoop-hdfs-2.2.0.jar
+2017-01-01 22:27:43.993+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/json4s/json4s-core_2.10/3.2.11/json4s-core_2.10-3.2.11.jar
+2017-01-01 22:27:43.994+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-csv/3.1.0/neo4j-csv-3.1.0.jar
+2017-01-01 22:27:43.994+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/spark-project/spark/unused/1.0.0/unused-1.0.0.jar
+2017-01-01 22:27:43.994+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-io/commons-io/2.1/commons-io-2.1.jar
+2017-01-01 22:27:43.994+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-shapefile/9.2/gt-shapefile-9.2.jar
+2017-01-01 22:27:43.995+0000 INFO  [o.n.k.i.DiagnosticsManager]  [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/resources.jar
+2017-01-01 22:27:43.995+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/parquet/parquet-hadoop/1.8.1/parquet-hadoop-1.8.1.jar
+2017-01-01 22:27:43.995+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/io/netty/netty-all/4.0.42.Final/netty-all-4.0.42.Final.jar
+2017-01-01 22:27:43.996+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/curator/curator-framework/2.4.0/curator-framework-2.4.0.jar
+2017-01-01 22:27:43.996+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-yarn-api/2.2.0/hadoop-yarn-api-2.2.0.jar
+2017-01-01 22:27:43.996+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar
+2017-01-01 22:27:43.996+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.6.5/jackson-core-2.6.5.jar
+2017-01-01 22:27:43.997+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/jdom/jdom/1.0/jdom-1.0.jar
+2017-01-01 22:27:43.997+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/scala-lang/scala-library/2.10.6/scala-library-2.10.6.jar
+2017-01-01 22:27:43.997+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/hk2/hk2-locator/2.4.0-b34/hk2-locator-2.4.0-b34.jar
+2017-01-01 22:27:43.998+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/net/razorvine/pyrolite/4.13/pyrolite-4.13.jar
+2017-01-01 22:27:43.998+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-auth/2.2.0/hadoop-auth-2.2.0.jar
+2017-01-01 22:27:43.998+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.6.5/jackson-annotations-2.6.5.jar
+2017-01-01 22:27:43.999+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/ivy/ivy/2.4.0/ivy-2.4.0.jar
+2017-01-01 22:27:43.999+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/jersey/core/jersey-server/2.22.2/jersey-server-2.22.2.jar
+2017-01-01 22:27:43.999+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/google/inject/guice/3.0/guice-3.0.jar
+2017-01-01 22:27:44.000+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/hk2/hk2-utils/2.4.0-b34/hk2-utils-2.4.0-b34.jar
+2017-01-01 22:27:44.000+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-render/9.2/gt-render-9.2.jar
+2017-01-01 22:27:44.000+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/lucene/lucene-core/5.5.0/lucene-core-5.5.0.jar
+2017-01-01 22:27:44.000+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/scala-lang/scala-reflect/2.10.6/scala-reflect-2.10.6.jar
+2017-01-01 22:27:44.001+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/codehaus/janino/commons-compiler/3.0.0/commons-compiler-3.0.0.jar
+2017-01-01 22:27:44.001+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-common/2.2.0/hadoop-mapreduce-client-common-2.2.0.jar
+2017-01-01 22:27:44.001+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.6.5/jackson-databind-2.6.5.jar
+2017-01-01 22:27:44.002+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/jfxrt.jar
+2017-01-01 22:27:44.002+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13.jar
+2017-01-01 22:27:44.002+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar
+2017-01-01 22:27:44.002+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/jaitools/jt-zonalstats/1.3.0/jt-zonalstats-1.3.0.jar
+2017-01-01 22:27:44.003+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-common/2.2.0/hadoop-common-2.2.0.jar
+2017-01-01 22:27:44.003+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/hk2/external/aopalliance-repackaged/2.4.0-b34/aopalliance-repackaged-2.4.0-b34.jar
+2017-01-01 22:27:44.003+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/twitter/chill_2.10/0.8.0/chill_2.10-0.8.0.jar
+2017-01-01 22:27:44.004+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/it/geosolutions/imageio-ext/imageio-ext-tiff/1.1.7/imageio-ext-tiff-1.1.7.jar
+2017-01-01 22:27:44.004+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/oro/oro/2.0.8/oro-2.0.8.jar
+2017-01-01 22:27:44.004+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/zookeeper/zookeeper/3.4.5/zookeeper-3.4.5.jar
+2017-01-01 22:27:44.005+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-tags_2.10/2.1.0/spark-tags_2.10-2.1.0.jar
+2017-01-01 22:27:44.005+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-network-common_2.10/2.1.0/spark-network-common_2.10-2.1.0.jar
+2017-01-01 22:27:44.005+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/io/dropwizard/metrics/metrics-graphite/3.1.2/metrics-graphite-3.1.2.jar
+2017-01-01 22:27:44.005+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-logging/3.1.0/neo4j-logging-3.1.0.jar
+2017-01-01 22:27:44.006+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-spatial/0.19-neo4j-3.0.3/neo4j-spatial-0.19-neo4j-3.0.3.jar
+2017-01-01 22:27:44.006+0000 INFO  [o.n.k.i.DiagnosticsManager]  [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/jsse.jar
+2017-01-01 22:27:44.006+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar
+2017-01-01 22:27:44.007+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/javax/media/jai_imageio/1.1/jai_imageio-1.1.jar
+2017-01-01 22:27:44.007+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar
+2017-01-01 22:27:44.007+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar
+2017-01-01 22:27:44.007+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/fasterxml/jackson/module/jackson-module-paranamer/2.6.5/jackson-module-paranamer-2.6.5.jar
+2017-01-01 22:27:44.008+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar
+2017-01-01 22:27:44.008+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-unsafe_2.10/2.1.0/spark-unsafe_2.10-2.1.0.jar
+2017-01-01 22:27:44.008+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-sketch_2.10/2.1.0/spark-sketch_2.10-2.1.0.jar
+2017-01-01 22:27:44.009+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/localedata.jar
+2017-01-01 22:27:44.009+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-launcher_2.10/2.1.0/spark-launcher_2.10-2.1.0.jar
+2017-01-01 22:27:44.009+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar
+2017-01-01 22:27:44.010+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-yarn-common/2.2.0/hadoop-yarn-common-2.2.0.jar
+2017-01-01 22:27:44.010+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/avro/avro-mapred/1.7.7/avro-mapred-1.7.7-hadoop2.jar
+2017-01-01 22:27:44.010+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-unsafe/3.1.0/neo4j-unsafe-3.1.0.jar
+2017-01-01 22:27:44.010+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar
+2017-01-01 22:27:44.011+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/curator/curator-client/2.4.0/curator-client-2.4.0.jar
+2017-01-01 22:27:44.011+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/tukaani/xz/1.0/xz-1.0.jar
+2017-01-01 22:27:44.011+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/hk2/osgi-resource-locator/1.0.1/osgi-resource-locator-1.0.1.jar
+2017-01-01 22:27:44.012+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/parquet/parquet-format/2.3.0-incubating/parquet-format-2.3.0-incubating.jar
+2017-01-01 22:27:44.012+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/codehaus/jackson/jackson-core-asl/1.9.13/jackson-core-asl-1.9.13.jar
+2017-01-01 22:27:44.012+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/objenesis/objenesis/2.1/objenesis-2.1.jar
+2017-01-01 22:27:44.012+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-api/9.2/gt-api-9.2.jar
+2017-01-01 22:27:44.013+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/avro/avro-ipc/1.7.7/avro-ipc-1.7.7-tests.jar
+2017-01-01 22:27:44.013+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-beanutils/commons-beanutils-core/1.8.0/commons-beanutils-core-1.8.0.jar
+2017-01-01 22:27:44.013+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/clearspring/analytics/stream/2.7.0/stream-2.7.0.jar
+2017-01-01 22:27:44.014+0000 INFO  [o.n.k.i.DiagnosticsManager]  [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/rt.jar
+2017-01-01 22:27:44.014+0000 INFO  [o.n.k.i.DiagnosticsManager]  [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/jfr.jar
+2017-01-01 22:27:44.014+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-common/3.1.0/neo4j-common-3.1.0.jar
+2017-01-01 22:27:44.014+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-lucene-upgrade/3.1.0/neo4j-lucene-upgrade-3.1.0.jar
+2017-01-01 22:27:44.015+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-codec/commons-codec/1.3/commons-codec-1.3.jar
+2017-01-01 22:27:44.015+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.16/jcl-over-slf4j-1.7.16.jar
+2017-01-01 22:27:44.015+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/io/dropwizard/metrics/metrics-core/3.1.2/metrics-core-3.1.2.jar
+2017-01-01 22:27:44.016+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/google/protobuf/protobuf-java/2.5.0/protobuf-java-2.5.0.jar
+2017-01-01 22:27:44.016+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/commons/commons-compress/1.4.1/commons-compress-1.4.1.jar
+2017-01-01 22:27:44.016+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-referencing/9.2/gt-referencing-9.2.jar
+2017-01-01 22:27:44.017+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/net/java/dev/jets3t/jets3t/0.7.1/jets3t-0.7.1.jar
+2017-01-01 22:27:44.017+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/vividsolutions/jts/1.13/jts-1.13.jar
+2017-01-01 22:27:44.017+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/parquet/parquet-jackson/1.8.1/parquet-jackson-1.8.1.jar
+2017-01-01 22:27:44.017+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-yarn-client/2.2.0/hadoop-yarn-client-2.2.0.jar
+2017-01-01 22:27:44.018+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-jobclient/2.2.0/hadoop-mapreduce-client-jobclient-2.2.0.jar
+2017-01-01 22:27:44.018+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-graphdb-api/3.1.0/neo4j-graphdb-api-3.1.0.jar
+2017-01-01 22:27:44.018+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/it/geosolutions/imageio-ext/imageio-ext-utilities/1.1.7/imageio-ext-utilities-1.1.7.jar
+2017-01-01 22:27:44.019+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-client/2.2.0/hadoop-client-2.2.0.jar
+2017-01-01 22:27:44.019+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/mortbay/jetty/jetty-util/6.1.26/jetty-util-6.1.26.jar
+2017-01-01 22:27:44.019+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/git/SparkApp/target/classes/
+2017-01-01 22:27:44.020+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/fusesource/leveldbjni/leveldbjni-all/1.8/leveldbjni-all-1.8.jar
+2017-01-01 22:27:44.020+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/javassist/javassist/3.18.1-GA/javassist-3.18.1-GA.jar
+2017-01-01 22:27:44.020+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-core/2.2.0/hadoop-mapreduce-client-core-2.2.0.jar
+2017-01-01 22:27:44.021+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/twitter/chill-java/0.8.0/chill-java-0.8.0.jar
+2017-01-01 22:27:44.021+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-configuration/commons-configuration/1.6/commons-configuration-1.6.jar
+2017-01-01 22:27:44.021+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/jersey/media/jersey-media-jaxb/2.22.2/jersey-media-jaxb-2.22.2.jar
+2017-01-01 22:27:44.022+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/jersey/bundles/repackaged/jersey-guava/2.22.2/jersey-guava-2.22.2.jar
+2017-01-01 22:27:44.022+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/slf4j/jul-to-slf4j/1.7.16/jul-to-slf4j-1.7.16.jar
+2017-01-01 22:27:44.022+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/roaringbitmap/RoaringBitmap/0.5.11/RoaringBitmap-0.5.11.jar
+2017-01-01 22:27:44.023+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/lucene/lucene-backward-codecs/5.5.0/lucene-backward-codecs-5.5.0.jar
+2017-01-01 22:27:44.023+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/io/dropwizard/metrics/metrics-jvm/3.1.2/metrics-jvm-3.1.2.jar
+2017-01-01 22:27:44.023+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/javax/media/jai_codec/1.1.3/jai_codec-1.1.3.jar
+2017-01-01 22:27:44.023+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/datasyslab/geospark/0.3.2/geospark-0.3.2.jar
+2017-01-01 22:27:44.024+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/xerial/snappy/snappy-java/1.1.2.6/snappy-java-1.1.2.6.jar
+2017-01-01 22:27:44.024+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/hk2/hk2-api/2.4.0-b34/hk2-api-2.4.0-b34.jar
+2017-01-01 22:27:44.024+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/sunec.jar
+2017-01-01 22:27:44.025+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/slf4j/slf4j-log4j12/1.7.16/slf4j-log4j12-1.7.16.jar
+2017-01-01 22:27:44.025+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/jersey/core/jersey-client/2.22.2/jersey-client-2.22.2.jar
+2017-01-01 22:27:44.025+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/esotericsoftware/kryo-shaded/3.0.3/kryo-shaded-3.0.3.jar
+2017-01-01 22:27:44.026+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-digester/commons-digester/1.8/commons-digester-1.8.jar
+2017-01-01 22:27:44.026+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar
+2017-01-01 22:27:44.026+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/net/jpountz/lz4/lz4/1.3.0/lz4-1.3.0.jar
+2017-01-01 22:27:44.027+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/javax/ws/rs/javax.ws.rs-api/2.0.1/javax.ws.rs-api-2.0.1.jar
+2017-01-01 22:27:44.027+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/scala-lang/scala-compiler/2.10.0/scala-compiler-2.10.0.jar
+2017-01-01 22:27:44.027+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/cldrdata.jar
+2017-01-01 22:27:44.028+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/codehaus/janino/janino/3.0.0/janino-3.0.0.jar
+2017-01-01 22:27:44.028+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/json4s/json4s-jackson_2.10/3.2.11/json4s-jackson_2.10-3.2.11.jar
+2017-01-01 22:27:44.028+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/google/guava/guava/14.0.1/guava-14.0.1.jar
+2017-01-01 22:27:44.029+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/thoughtworks/paranamer/paranamer/2.6/paranamer-2.6.jar
+2017-01-01 22:27:44.029+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-collections/3.1.0/neo4j-collections-3.1.0.jar
+2017-01-01 22:27:44.030+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/googlecode/json-simple/json-simple/1.1/json-simple-1.1.jar
+2017-01-01 22:27:44.030+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar
+2017-01-01 22:27:44.030+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/System/Library/Java/Extensions/MRJToolkit.jar
+2017-01-01 22:27:44.031+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/commons/commons-crypto/1.0.0/commons-crypto-1.0.0.jar
+2017-01-01 22:27:44.031+0000 INFO  [o.n.k.i.DiagnosticsManager]  [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/jce.jar
+2017-01-01 22:27:44.032+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar
+2017-01-01 22:27:44.032+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-core_2.10/2.1.0/spark-core_2.10-2.1.0.jar
+2017-01-01 22:27:44.032+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/avro/avro/1.7.7/avro-1.7.7.jar
+2017-01-01 22:27:44.033+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/io/netty/netty/3.8.0.Final/netty-3.8.0.Final.jar
+2017-01-01 22:27:44.033+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-coverage/9.2/gt-coverage-9.2.jar
+2017-01-01 22:27:44.034+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-yarn-server-common/2.2.0/hadoop-yarn-server-common-2.2.0.jar
+2017-01-01 22:27:44.034+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/spark/spark-sql_2.10/2.1.0/spark-sql_2.10-2.1.0.jar
+2017-01-01 22:27:44.034+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/zipfs.jar
+2017-01-01 22:27:44.035+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/jaccess.jar
+2017-01-01 22:27:44.035+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/scala-lang/scalap/2.10.0/scalap-2.10.0.jar
+2017-01-01 22:27:44.035+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-opengis/9.2/gt-opengis-9.2.jar
+2017-01-01 22:27:44.035+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-resource/3.1.0/neo4j-resource-3.1.0.jar
+2017-01-01 22:27:44.036+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/jaitools/jt-utils/1.3.0/jt-utils-1.3.0.jar
+2017-01-01 22:27:44.036+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/io/dropwizard/metrics/metrics-json/3.1.2/metrics-json-3.1.2.jar
+2017-01-01 22:27:44.036+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-kernel/3.1.0/neo4j-kernel-3.1.0.jar
+2017-01-01 22:27:44.037+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/xmlenc/xmlenc/0.52/xmlenc-0.52.jar
+2017-01-01 22:27:44.037+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-cli/commons-cli/1.2/commons-cli-1.2.jar
+2017-01-01 22:27:44.037+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/parquet/parquet-common/1.8.1/parquet-common-1.8.1.jar
+2017-01-01 22:27:44.037+0000 INFO  [o.n.k.i.DiagnosticsManager]  [bootstrap] /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/classes
+2017-01-01 22:27:44.038+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-lang/commons-lang/2.5/commons-lang-2.5.jar
+2017-01-01 22:27:44.038+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/net/java/dev/jsr-275/jsr-275/1.0-beta-2/jsr-275-1.0-beta-2.jar
+2017-01-01 22:27:44.038+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/javax/annotation/javax.annotation-api/1.2/javax.annotation-api-1.2.jar
+2017-01-01 22:27:44.039+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/jersey/containers/jersey-container-servlet/2.22.2/jersey-container-servlet-2.22.2.jar
+2017-01-01 22:27:44.039+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-net/commons-net/2.2/commons-net-2.2.jar
+2017-01-01 22:27:44.039+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/java3d/vecmath/1.3.2/vecmath-1.3.2.jar
+2017-01-01 22:27:44.039+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/geotools/gt-metadata/9.2/gt-metadata-9.2.jar
+2017-01-01 22:27:44.040+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/dnsns.jar
+2017-01-01 22:27:44.040+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar
+2017-01-01 22:27:44.040+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/neo4j/neo4j-io/3.1.0/neo4j-io-3.1.0.jar
+2017-01-01 22:27:44.041+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/parquet/parquet-column/1.8.1/parquet-column-1.8.1.jar
+2017-01-01 22:27:44.041+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/antlr/antlr4-runtime/4.5.3/antlr4-runtime-4.5.3.jar
+2017-01-01 22:27:44.041+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/javax/media/jai_core/1.1.3/jai_core-1.1.3.jar
+2017-01-01 22:27:44.041+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/scalatest/scalatest_2.10/2.2.6/scalatest_2.10-2.2.6.jar
+2017-01-01 22:27:44.042+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar
+2017-01-01 22:27:44.042+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-mapreduce-client-app/2.2.0/hadoop-mapreduce-client-app-2.2.0.jar
+2017-01-01 22:27:44.042+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/parquet/parquet-encoding/1.8.1/parquet-encoding-1.8.1.jar
+2017-01-01 22:27:44.043+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/apache/hadoop/hadoop-annotations/2.2.0/hadoop-annotations-2.2.0.jar
+2017-01-01 22:27:44.043+0000 INFO  [o.n.k.i.DiagnosticsManager]  [loader.1] file:/Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib/ext/nashorn.jar
+2017-01-01 22:27:44.043+0000 INFO  [o.n.k.i.DiagnosticsManager]  [classpath + loader.0] file:/Users/kanghuaqiang/.m2/repository/org/glassfish/jersey/core/jersey-common/2.22.2/jersey-common-2.22.2.jar
+2017-01-01 22:27:44.044+0000 INFO  [o.n.k.i.DiagnosticsManager] Library path:
+2017-01-01 22:27:44.044+0000 INFO  [o.n.k.i.DiagnosticsManager] /Users/kanghuaqiang/Library/Java/Extensions
+2017-01-01 22:27:44.045+0000 INFO  [o.n.k.i.DiagnosticsManager] /Library/Java/Extensions
+2017-01-01 22:27:44.045+0000 INFO  [o.n.k.i.DiagnosticsManager] /Network/Library/Java/Extensions
+2017-01-01 22:27:44.045+0000 INFO  [o.n.k.i.DiagnosticsManager] /System/Library/Java/Extensions
+2017-01-01 22:27:44.046+0000 INFO  [o.n.k.i.DiagnosticsManager] /usr/lib/java
+2017-01-01 22:27:44.046+0000 INFO  [o.n.k.i.DiagnosticsManager] /Users/kanghuaqiang/git/SparkApp
+2017-01-01 22:27:44.046+0000 INFO  [o.n.k.i.DiagnosticsManager] System.properties:
+2017-01-01 22:27:44.047+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.boot.library.path = /Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/jre/lib
+2017-01-01 22:27:44.047+0000 INFO  [o.n.k.i.DiagnosticsManager] io.netty.maxDirectMemory = 0
+2017-01-01 22:27:44.047+0000 INFO  [o.n.k.i.DiagnosticsManager] user.country.format = SG
+2017-01-01 22:27:44.048+0000 INFO  [o.n.k.i.DiagnosticsManager] gopherProxySet = false
+2017-01-01 22:27:44.048+0000 INFO  [o.n.k.i.DiagnosticsManager] path.separator = :
+2017-01-01 22:27:44.048+0000 INFO  [o.n.k.i.DiagnosticsManager] file.encoding.pkg = sun.io
+2017-01-01 22:27:44.049+0000 INFO  [o.n.k.i.DiagnosticsManager] user.country = US
+2017-01-01 22:27:44.049+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.java.launcher = SUN_STANDARD
+2017-01-01 22:27:44.049+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.os.patch.level = unknown
+2017-01-01 22:27:44.050+0000 INFO  [o.n.k.i.DiagnosticsManager] user.dir = /Users/kanghuaqiang/git/SparkApp
+2017-01-01 22:27:44.050+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.jnu.encoding = UTF-8
+2017-01-01 22:27:44.051+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.nio.ch.bugLevel = 
+2017-01-01 22:27:44.051+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+2017-01-01 22:27:44.051+0000 INFO  [o.n.k.i.DiagnosticsManager] http.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+2017-01-01 22:27:44.052+0000 INFO  [o.n.k.i.DiagnosticsManager] user.home = /Users/kanghuaqiang
+2017-01-01 22:27:44.052+0000 INFO  [o.n.k.i.DiagnosticsManager] user.timezone = America/Montreal
+2017-01-01 22:27:44.052+0000 INFO  [o.n.k.i.DiagnosticsManager] file.encoding = UTF-8
+2017-01-01 22:27:44.053+0000 INFO  [o.n.k.i.DiagnosticsManager] user.name = kanghuaqiang
+2017-01-01 22:27:44.053+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.java.command = com.hqkang.SparkApp.core.WordCount out
+2017-01-01 22:27:44.053+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.arch.data.model = 64
+2017-01-01 22:27:44.054+0000 INFO  [o.n.k.i.DiagnosticsManager] user.language = en
+2017-01-01 22:27:44.054+0000 INFO  [o.n.k.i.DiagnosticsManager] awt.toolkit = sun.lwawt.macosx.LWCToolkit
+2017-01-01 22:27:44.054+0000 INFO  [o.n.k.i.DiagnosticsManager] file.separator = /
+2017-01-01 22:27:44.055+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.io.unicode.encoding = UnicodeBig
+2017-01-01 22:27:44.055+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.cpu.endian = little
+2017-01-01 22:27:44.055+0000 INFO  [o.n.k.i.DiagnosticsManager] socksNonProxyHosts = local|*.local|169.254/16|*.169.254/16
+2017-01-01 22:27:44.055+0000 INFO  [o.n.k.i.DiagnosticsManager] ftp.nonProxyHosts = local|*.local|169.254/16|*.169.254/16
+2017-01-01 22:27:44.056+0000 INFO  [o.n.k.i.DiagnosticsManager] sun.cpu.isalist = 
+2017-01-01 22:27:44.056+0000 INFO  [o.n.k.i.DiagnosticsManager] Network information:
+2017-01-01 22:27:44.057+0000 INFO  [o.n.k.i.DiagnosticsManager] Interface utun1:
+2017-01-01 22:27:44.058+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: fe80:0:0:0:c222:1703:a7d6:8514%utun1
+2017-01-01 22:27:44.058+0000 INFO  [o.n.k.i.DiagnosticsManager] Interface utun0:
+2017-01-01 22:27:44.059+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: fd9f:10a9:9a10:7e90:a9a2:a5d4:f483:5411
+2017-01-01 22:27:44.059+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: fe80:0:0:0:a9a2:a5d4:f483:5411%utun0
+2017-01-01 22:27:44.060+0000 INFO  [o.n.k.i.DiagnosticsManager] Interface awdl0:
+2017-01-01 22:27:44.060+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: fe80:0:0:0:a8ba:fbff:fe07:1048%awdl0
+2017-01-01 22:27:44.061+0000 INFO  [o.n.k.i.DiagnosticsManager] Interface en0:
+2017-01-01 22:27:44.061+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: fe80:0:0:0:3636:3bff:fe72:1944%en0
+2017-01-01 22:27:44.062+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: 192.168.2.18
+2017-01-01 22:27:44.063+0000 INFO  [o.n.k.i.DiagnosticsManager] Interface lo0:
+2017-01-01 22:27:44.063+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: fe80:0:0:0:0:0:0:1%lo0
+2017-01-01 22:27:44.064+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: 0:0:0:0:0:0:0:1
+2017-01-01 22:27:44.064+0000 INFO  [o.n.k.i.DiagnosticsManager]     address: 127.0.0.1
+2017-01-01 22:27:44.064+0000 INFO  [o.n.k.i.DiagnosticsManager] --- INITIALIZED diagnostics END ---
+2017-01-01 22:27:44.157+0000 INFO  [o.n.k.i.DiagnosticsManager] --- STOPPING diagnostics START ---
+2017-01-01 22:27:44.158+0000 INFO  [o.n.k.i.DiagnosticsManager] --- STOPPING diagnostics END ---
+2017-01-01 22:27:44.160+0000 INFO  [o.n.k.i.f.GraphDatabaseFacadeFactory] Shutdown started
