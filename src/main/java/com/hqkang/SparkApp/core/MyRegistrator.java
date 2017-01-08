@@ -11,7 +11,13 @@ public class MyRegistrator implements KryoRegistrator{
 	public void registerClasses(Kryo k) {
 		// TODO Auto-generated method stub
 		k.register(EditableLayer.class);
-		
+		k.register(MBR.class);
+		k.register(MBRList.class);
+		k.register(Neo4JCon.class);
+		k.register(Point.class);
+
+
+
 	}
 
 }

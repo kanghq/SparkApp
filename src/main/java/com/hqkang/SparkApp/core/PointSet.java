@@ -59,20 +59,17 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 		return res;
 	}
 	
-	public ArrayList<Point> range() {
-		double l = xSet.firstKey();
-		double r = xSet.lastKey();
-		double t = ySet.lastKey();
-		double b = ySet.firstKey();
-		Point lt = new Point(l,t);
-		Point rt = new Point(r,t);
-		Point rb = new Point(r,b);
-		Point lb = new Point(l,b);
-		ArrayList<Point> res = new ArrayList<Point>();
-		res.add(lt);
-		res.add(rt);
-		res.add(rb);
-		res.add(lb);
+	public ArrayList<Double> range() {
+		double XMin = xSet.firstKey();
+		double XMax = xSet.lastKey();
+		double YMax = ySet.lastKey();
+		double YMin = ySet.firstKey();
+		
+		ArrayList<Double> res = new ArrayList<Double>();
+		res.add(XMin);
+		res.add(XMax);
+		res.add(YMin);
+		res.add(YMax);
 		return res;
 		
 	}

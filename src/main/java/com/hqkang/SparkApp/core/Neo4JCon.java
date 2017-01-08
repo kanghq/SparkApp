@@ -2,6 +2,8 @@ package com.hqkang.SparkApp.core;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.encoders.SimpleGraphEncoder;
@@ -9,8 +11,13 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
 public class Neo4JCon implements Serializable{
+	static ResourceBundle rb = ResourceBundle.getBundle("com.hqkang.SparkApp.core.Config");
 	
-	private static final File storeDir = new File("/Users/kanghuaqiang/Downloads/neo4j-community-3.1.0/data/databases/graph.db/");
+	static String dbPath = "/Users/kanghuaqiang/Downloads/neo4j-community-3.1.0/data/databases/graph.db/";
+
+
+	
+	private static final File storeDir = new File(rb.getString("dbPath"));
 
 	private static final GraphDatabaseService database = new GraphDatabaseFactory().newEmbeddedDatabase(storeDir);
 
@@ -24,7 +31,11 @@ public class Neo4JCon implements Serializable{
 		
 	}
 	
-	public SerializedEL getConn() {
+	public SerializedEL getLayer() {
 		return traLayer;
+	}
+	
+	public GraphDatabaseService getDb() {
+		return database;
 	}
 }

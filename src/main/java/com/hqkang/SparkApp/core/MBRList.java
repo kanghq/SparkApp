@@ -20,7 +20,6 @@ public class MBRList extends java.util.LinkedList<MBR>  {
 		
 		if(null != secE)
 		{
-			ele.setRB(secE.getRB());
 			ele.merge(this.get(index+1));
 			remove(index+1);
 			return true;
@@ -31,13 +30,20 @@ public class MBRList extends java.util.LinkedList<MBR>  {
 	
 	TreeMap calculatePotentialMergeCost() {
 		TreeMap<Double, Integer> res = new TreeMap();
+		double thrVol = 9999;
+		int nodeN = -1;
 		for(int i = 0; i < size()-1; i++) {
 			MBR ori = get(i);
 			MBR sec = get(i+1);
 			double volum = MBR.calculateVolume(ori, sec)-ori.volume();
-			res.put(volum, i);
+			if(volum < thrVol) {
+				thrVol = volum;
+				nodeN = i;
+			}
+			
 			
 		}
+		res.put(thrVol, nodeN);
 		return res;
 		
 	}
@@ -59,7 +65,29 @@ public class MBRList extends java.util.LinkedList<MBR>  {
 		TreeMap<Double, Integer> priQueue = mbrPriList.calculatePotentialMergeCost();
 		mbrPriList.mergeNextOne(priQueue.firstEntry().getValue());
 		}
+		int size = mbrPriList.size();
 		Collections.sort(mbrPriList);
+		Iterator<MBR> mbrIte = mbrPriList.iterator();
+		MBR first = mbrIte.next();
+		if(first.getInsidePoints().size() == 1){
+				while(mbrIte.hasNext()) {
+				
+				MBR sec = mbrIte.next();
+				first.add(sec.getInsidePoints().first());
+				first = sec;
+			}
+			
+		}
+		else {
+			while(mbrIte.hasNext()) {
+				
+				MBR sec = mbrIte.next();
+				sec.add(first.getInsidePoints().last());
+				first = sec;
+			}
+		}
+		
+		
 		
 		return new Tuple2(fileNmae, mbrPriList);
 		
