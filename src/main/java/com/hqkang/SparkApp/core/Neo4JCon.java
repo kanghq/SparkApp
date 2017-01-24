@@ -9,6 +9,7 @@ import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.encoders.SimpleGraphEncoder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.index.IndexManager;
 
 public class Neo4JCon implements Serializable{
 	static ResourceBundle rb = ResourceBundle.getBundle("com.hqkang.SparkApp.core.Config");
@@ -28,6 +29,8 @@ public class Neo4JCon implements Serializable{
 	private static final SerializedEL traLayer = (SerializedEL) spatialService.getOrCreateLayer("Tra", SimpleGraphEncoder.class, SerializedEL.class);
 
 	public Neo4JCon() {
+		String[] properties = {"Seq", "TraID", "StartTime", "EndTime"};
+		traLayer.setExtraPropertyNames(properties);
 		
 	}
 	

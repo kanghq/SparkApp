@@ -62,21 +62,31 @@ public class MBRList extends java.util.LinkedList<MBR>  {
 		}
 		
 		while(mbrPriList.size() > k) {
-		TreeMap<Double, Integer> priQueue = mbrPriList.calculatePotentialMergeCost();
-		mbrPriList.mergeNextOne(priQueue.firstEntry().getValue());
+			TreeMap<Double, Integer> priQueue = mbrPriList.calculatePotentialMergeCost();
+			mbrPriList.mergeNextOne(priQueue.firstEntry().getValue());
 		}
 		int size = mbrPriList.size();
 		Collections.sort(mbrPriList);
 		Iterator<MBR> mbrIte = mbrPriList.iterator();
 		MBR first = mbrIte.next();
 		if(first.getInsidePoints().size() == 1){
-				while(mbrIte.hasNext()) {
+			MBR lastOne = null;
+
+			
+			while(mbrIte.hasNext()) {
 				
 				MBR sec = mbrIte.next();
 				first.add(sec.getInsidePoints().first());
+				lastOne = first;
 				first = sec;
+					
 			}
-			
+			if(!mbrIte.hasNext()) {
+				first.add(lastOne.getInsidePoints().last());
+				if(first.getInsidePoints().size()==1) {
+					mbrPriList.remove(first);
+				}
+			}
 		}
 		else {
 			while(mbrIte.hasNext()) {

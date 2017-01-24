@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
 public class MBR implements Comparable,Serializable{
 	
@@ -23,13 +24,8 @@ public class MBR implements Comparable,Serializable{
 	
 	public MBR(Point _lt, Point _rb) {
 		
-		
 		this.insidePoints.add(_lt);
-		this.insidePoints.add(_rb);
-
-
-
-		
+		this.insidePoints.add(_rb);		
 	}
 
 
@@ -53,7 +49,9 @@ public class MBR implements Comparable,Serializable{
 		Double XMax = ptList.get(1);
 		Double YMin = ptList.get(2);
 		Double YMax = ptList.get(3);
-		return Math.abs((XMax-XMin)*(YMax-YMin));
+		Double TMin = ptList.get(4);
+		Double TMax = ptList.get(5);
+		return Math.abs((XMax-XMin)*(YMax-YMin)*(TMax-TMin));
 	}
 	
 	public boolean merge(MBR m) {
@@ -113,12 +111,13 @@ public class MBR implements Comparable,Serializable{
 	
 	public LinearRing shape() {
 		Coordinate firstArray[] = new Coordinate[5];
-		firstArray[0] = new Coordinate(this.getXMin(), this.getYMin());
-        firstArray[1] = new Coordinate(this.getXMax(), this.getYMin());
-        firstArray[2] = new Coordinate(this.getXMax(), this.getYMax());
-        firstArray[3] = new Coordinate(this.getXMin(), this.getYMax());
-        firstArray[4] = new Coordinate(this.getXMin(), this.getYMin());
-        
+		
+		firstArray[0] = new Coordinate(this.getXMin(), this.getYMin(), this.getTMin());
+        firstArray[1] = new Coordinate(this.getXMax(), this.getYMin(), this.getTMin());
+        firstArray[2] = new Coordinate(this.getXMax(), this.getYMax(), this.getTMin());
+        firstArray[3] = new Coordinate(this.getXMin(), this.getYMax(), this.getTMin());
+        firstArray[4] = new Coordinate(this.getXMin(), this.getYMin(), this.getTMax());
+
         SerializedEL traLayer = new Neo4JCon().getLayer();
         LinearRing shell = traLayer.getGeometryFactory().createLinearRing(firstArray);
         return shell;
@@ -135,31 +134,26 @@ public class MBR implements Comparable,Serializable{
 
 
 
-
-
-
-
-
 	public Double getXMax() {
 		return this.insidePoints.range().get(1);
 	}
-
-
-
-
 
 	public Double getYMin() {
 		return this.insidePoints.range().get(2);
 	}
 
 
-
-
-
 	public Double getYMax() {
 		return this.insidePoints.range().get(3);
 	}
 
+	public Double getTMin() {
+		return this.insidePoints.range().get(4);
+	}
+	
+	public Double getTMax() {
+		return this.insidePoints.range().get(5);
+	}
 
 
 }

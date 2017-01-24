@@ -3,6 +3,7 @@ package com.hqkang.SparkApp.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -11,7 +12,7 @@ import java.util.TreeMap;
 public class PointSet extends LinkedHashSet<Point> implements Serializable{
 	TreeMap<Double, Point> xSet = new TreeMap<Double, Point>();
 	TreeMap<Double, Point> ySet = new TreeMap<Double, Point>();
-
+	TreeMap<Date, Point> tSet = new TreeMap<Date, Point>();
 
 	
 	public boolean add(Point pt) {
@@ -19,6 +20,7 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 		
 		xSet.put(pt.X(), pt);
 		ySet.put(pt.Y(), pt);
+		tSet.put(pt.T(), pt);
 		return res;
 	}
 	
@@ -30,6 +32,7 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 			Point p = ite.next();
 			xSet.put(p.X(),p);
 			ySet.put(p.Y(), p);
+			tSet.put(p.T(), p);
 
 		}
 		
@@ -56,6 +59,7 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 		boolean res = super.remove(pt);
 		xSet.remove(pt.X(), pt);
 		ySet.remove(pt.Y(), pt);
+		tSet.remove(pt.T(), pt);
 		return res;
 	}
 	
@@ -64,12 +68,16 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 		double XMax = xSet.lastKey();
 		double YMax = ySet.lastKey();
 		double YMin = ySet.firstKey();
+		double TMin = tSet.firstKey().getTime();
+		double TMax = tSet.lastKey().getTime();
 		
 		ArrayList<Double> res = new ArrayList<Double>();
 		res.add(XMin);
 		res.add(XMax);
 		res.add(YMin);
 		res.add(YMax);
+		res.add(TMin);
+		res.add(TMax);
 		return res;
 		
 	}

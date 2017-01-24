@@ -17,7 +17,10 @@ import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-
+import org.neo4j.driver.v1.AuthTokens;
+import org.neo4j.driver.v1.Driver;
+import org.neo4j.driver.v1.GraphDatabase;
+import org.neo4j.driver.v1.Session;
 
 import scala.Tuple2;
 
@@ -41,6 +44,8 @@ public class Import {
 			k  = Integer.parseInt(rb.getString("k"));
 
 		} 		catch(MissingResourceException ex){}
+		
+
 
 		
 		
@@ -85,7 +90,7 @@ public class Import {
 	
 		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = Helper.store2DB(mbrRDD).cache();
 
-		/*databaseRDD.foreach(new VoidFunction<Tuple2<Tuple2<Integer,String>,MBR>>() {
+		databaseRDD.foreach(new VoidFunction<Tuple2<Tuple2<Integer,String>,MBR>>() {
 
 			
 
@@ -97,7 +102,7 @@ public class Import {
 
 		
 				
-			}); */
+			}); 
 		databaseRDD.count(); 
 	
 	

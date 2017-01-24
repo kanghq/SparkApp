@@ -49,6 +49,10 @@ public class Point implements Serializable, Comparable{
 		return longitude;
 	}
 	
+	public Date T() {
+		return time;
+	}
+	
 	public void setSeq(int t){
 		this.seq = t;
 	}
@@ -56,6 +60,10 @@ public class Point implements Serializable, Comparable{
 	@Override
 	public int compareTo(Object o) {
 		Point p = (Point)o;
+		if(this.time ==null || p.time ==null) {
+			System.out.println(this.time);
+			System.out.println(p.time);
+		}
 		if(this.time.after(p.time))  {
 			return 1;
 		} else return -1;

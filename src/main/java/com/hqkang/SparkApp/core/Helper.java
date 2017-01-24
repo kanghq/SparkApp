@@ -36,11 +36,11 @@ public class Helper{
 	public static ArrayList<File> ReadAllFile(String filePath) {  
         File f = null;  
         f = new File(filePath);  
-        File[] files = f.listFiles(); // 得到f文件夹下面的所有文件。  
+        File[] files = f.listFiles(); // get all files from f folder
         ArrayList<File> list = new ArrayList<File>();  
         for (File file : files) {  
             if(file.isDirectory()) {  
-                //如何当前路劲是文件夹，则循环读取这个文件夹下的所有文件  
+                //if file is a directory，read its files recursively
                 ReadAllFile(file.getAbsolutePath());
             } else {
             	if(file.getName().endsWith("plt")) {
@@ -151,6 +151,9 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 								String sTime = parts[6];
 								Date time;
 								Point pt = new Point(sDate, sTime, lat, lon);
+								if(pt.getTime()==null) {
+									System.err.println("Error Point"+pt);
+								}
 								LinkedList<Point> ls = new LinkedList<Point>();
 								ls.add(pt);
 								return new Tuple2(fileName, ls); 
@@ -205,8 +208,8 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 						        SerializedEL traLayer = new Neo4JCon().getLayer();
 						        LinearRing shell = ele.shape();
 						        Polygon pol = traLayer.getGeometryFactory().createPolygon(shell);
-						        String[] property = {"TraID","Seq"};
-						        Object[] propertyField = {ele.getTraID(),ele.getSeq()};
+						        String[] property = {"TraID","Seq", "StartTime", "EndTime"};
+						        Object[] propertyField = {ele.getTraID(), ele.getSeq(), ele.getTMin(), ele.getTMax()};
 						        traLayer.add(pol, property, propertyField);
 						        Tuple2 idx = new Tuple2<Integer, String>(i, t._1);
 						        
