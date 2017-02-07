@@ -38,125 +38,38 @@ public class Retrieve {
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
 		
-		SparkSession spark = SparkSession.builder().master("local").appName("wordCount").getOrCreate();
+		SparkSession spark = SparkSession.builder().appName("wordCount").getOrCreate();
 		//spark.conf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
 		//spark.conf().set("spark.kryo.registrator", "MyRegistrator");
 		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
 		// Load our input data.
-		ResourceBundle rb = ResourceBundle.getBundle("com.hqkang.SparkApp.core.Config");
+		ResourceBundle rb = ResourceBundle.getBundle("Config");
 		int k =20;
 		String queryFile = "20081024020959.plt";
+		String filePath  = "000/Trajectory";
+
 		try{
 		    queryFile = rb.getString("queryFile");
+		    queryFile = rb.getString("importPath");
+
 			k  = Integer.parseInt(rb.getString("k"));
 
 		}
 		catch(MissingResourceException ex){}
 	
-	
-		JavaPairRDD<String, MBRList> queRDD =  Helper.importFromFile(queryFile, sc, k);
+		List<File> file = 	Helper.ReadAllFile(filePath);
+		Iterator<File> ite = file.iterator();
 		
-		JavaPairRDD<Tuple2, MBR> queryRDD = Helper.toTupleKey(queRDD);
+		String fileName = ite.next().getPath();
 		
-	
-      
-		JavaPairRDD<String, Tuple2> resultRDD = queryRDD.flatMapToPair(new PairFlatMapFunction<Tuple2<Tuple2, MBR>, String, Tuple2>() {
-
-
-
-			@Override
-			public Iterator<Tuple2<String, Tuple2>> call(Tuple2<Tuple2, MBR> t) throws Exception {
-				// TODO Auto-generated method stub
-				MBR queryMBR = t._2;
-	            ArrayList<Tuple2<String, Tuple2>> list = new ArrayList<Tuple2<String, Tuple2>>();
-
-				try (Transaction tx = new Neo4JCon().getDb().beginTx()) {
-		        	List<SpatialDatabaseRecord> results = null;
-		        	Envelope env = new Envelope(queryMBR.getXMin(), queryMBR.getXMax(), queryMBR.getYMin(), queryMBR.getYMax());
-
-		        	GeoPipeline pip = GeoPipeline
-		                    .startIntersectSearch(new Neo4JCon().getLayer(), new Neo4JCon().getLayer().getGeometryFactory().toGeometry(env))
-		                   ;
-		        	try{
-		        	results = pip
-		                    .toSpatialDatabaseRecordList();
-		        	} catch(Exception e) {
-		        		e.printStackTrace();
-		        	}
-		            for ( SpatialDatabaseRecord r : results )
-			        {
-			            System.out.println( "\t\tGeometry: " + r );
-			            Geometry queriedGeo = r.getGeometry();
-			            Polygon section = null;
-			            Double vol = 0.0;
-			            Geometry intersecRes = null;
-			            try {
-				            Polygon queriedPol =  new Neo4JCon().getLayer().getGeometryFactory().createPolygon(queriedGeo.getCoordinates());
-				            String TraID = (String) r.getProperty("TraID");
-				            String Seq = (String) r.getProperty("Seq");
-				            Double startTime = (Double) r.getProperty("StartTime");
-				            Double endTime = (Double) r.getProperty("EndTime");
-				            Tuple2 resultMBR = new Tuple2(Seq,TraID);
-				            
-				            System.out.println("Inters Obj"+queriedPol);
-				            if(startTime< queryMBR.getTMax() && endTime > queryMBR.getTMin()) {
-					            intersecRes = queriedPol.intersection(new Neo4JCon().getLayer().getGeometryFactory().createPolygon(queryMBR.shape()));
-					            
-				            	section = (Polygon) intersecRes;
-					            System.out.println("Inters NEW obj"+section);
-					            vol = section.getArea();
-				            } else { vol = 0.0;}
-				            
-				            list.add(new Tuple2(TraID, new Tuple2(vol, resultMBR)));
-			            } catch(ClassCastException | IllegalArgumentException e) {
-			            	
-			            	System.err.println("queriedGeo"+queriedGeo);
-			            	System.err.println("intersecRes:"+intersecRes);
-			            	
-			            	vol = 0.0;
-			            }
-			            
-			            
-			            
-			            
-			        }
-
-		            tx.success();
-		        }
-				
-				return list.iterator();
-			}
+		while(ite.hasNext()) {
 			
-		});
-		
-
-        JavaPairRDD<String, Double> canRDD = resultRDD.aggregateByKey(new Double(0.0), new Function2<Double, Tuple2, Double>() {
-
-			@Override
-			public Double call(Double v1, Tuple2 v2) throws Exception {
-				// TODO Auto-generated method stub
-				return v1 + (Double)v2._1;
-			}}, new Function2<Double, Double, Double>() {
-
-				@Override
-				public Double call(Double v1, Double v2) throws Exception {
-					// TODO Auto-generated method stub
-					return v1+v2;
-				}
-				
-			});
-        canRDD.foreach(new VoidFunction<Tuple2<String, Double>>(){
-
+			queryFile = ite.next().getPath();
+			Helper.retrieve(queryFile, sc, k);
 			
-
-			@Override
-			public void call(Tuple2<String, Double> t) throws Exception {
-				// TODO Auto-generated method stub
-				System.out.println(t._1+ " --"+ t._2);
-				
-			}});
+		}
+		
         
-        canRDD.count();
 		
 		sc.stop();
 	

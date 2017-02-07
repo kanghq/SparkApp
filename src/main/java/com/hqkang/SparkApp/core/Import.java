@@ -31,16 +31,16 @@ public class Import {
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
 		
-		SparkSession spark = SparkSession.builder().master("local").appName("wordCount").getOrCreate();
+		SparkSession spark = SparkSession.builder().appName("wordCount").getOrCreate();
 		spark.conf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
 		spark.conf().set("spark.kryo.registrator", "MyRegistrator");
 		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
 		// Load our input data.
-		String filePaht  = "000/Trajectory";
-		ResourceBundle rb = ResourceBundle.getBundle("com.hqkang.SparkApp.core.Config");
+		String filePath  = "000/Trajectory";
+		ResourceBundle rb = ResourceBundle.getBundle("Config");
 		int k=20;
 		try{
-			filePaht  = rb.getString("filePaht");
+			filePath  = rb.getString("importPath");
 			k  = Integer.parseInt(rb.getString("k"));
 
 		} 		catch(MissingResourceException ex){}
@@ -49,7 +49,7 @@ public class Import {
 
 		
 		
-		List<File> file = 	Helper.ReadAllFile(filePaht);
+		List<File> file = 	Helper.ReadAllFile(filePath);
 		Iterator<File> ite = file.iterator();
 		
 		String fileName = ite.next().getPath();
@@ -59,9 +59,9 @@ public class Import {
 			
 			fileName = ite.next().getPath();
 			JavaPairRDD<String, MBRList> newRDD = Helper.importFromFile(fileName, sc, k).cache();
-			newRDD.count();
+			//newRDD.count();
 			mbrRDD =  mbrRDD.union(newRDD).cache();
-			mbrRDD.count();
+			//mbrRDD.count();
 			
 		}
 		
@@ -103,7 +103,7 @@ public class Import {
 		
 				
 			}); 
-		databaseRDD.count(); 
+		//databaseRDD.count(); 
 	
 	
 		sc.stop();

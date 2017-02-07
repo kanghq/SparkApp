@@ -40,12 +40,12 @@ public class Ret_timeFirst {
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
 		
-		SparkSession spark = SparkSession.builder().master("local").appName("wordCount").getOrCreate();
+		SparkSession spark = SparkSession.builder().appName("wordCount").getOrCreate();
 		//spark.conf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
 		//spark.conf().set("spark.kryo.registrator", "MyRegistrator");
 		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
 		// Load our input data.
-		ResourceBundle rb = ResourceBundle.getBundle("com.hqkang.SparkApp.core.Config");
+		ResourceBundle rb = ResourceBundle.getBundle("Config");
 		int k =20;
 		String queryFile = "20081024020959.plt";
 		try{

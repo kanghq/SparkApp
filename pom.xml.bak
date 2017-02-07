@@ -9,7 +9,7 @@
 
   <name>SparkApp</name>
   <url>http://maven.apache.org</url>
-	
+  
   <repositories>
     <repository>
       <id>Akka repository</id>
@@ -52,7 +52,6 @@
             </snapshots>
         </repository>
   </repositories>
-    
   <dependencies>
 	<dependency>
         <groupId>org.neo4j</groupId>
@@ -101,17 +100,14 @@
     <java.version>1.8</java.version>
     <neo4j.version>3.1</neo4j.version>
     <scala.binary.version>2.10</scala.binary.version>
-  
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  
   <build>
-  <plugins>
-   <plugin>
+    <pluginManagement>
+      <plugins>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.2</version>
         <executions>
           <execution>
             <goals>
@@ -130,7 +126,8 @@
 			                </includes>
 			              </artifactSet>
                         <transformers>
-                            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <transformer>
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                 <mainClass>com.hqkang.SparkApp.core.Retrieve</mainClass>
                             </transformer>
                             <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
@@ -145,10 +142,16 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.1</version>
           <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
           </configuration>
 	</plugin>
-	</plugins>
+	
+
+      
+      
+		
+      </plugins>
+    </pluginManagement>
   </build>
 </project>

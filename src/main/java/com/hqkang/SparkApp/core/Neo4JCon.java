@@ -12,7 +12,8 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.IndexManager;
 
 public class Neo4JCon implements Serializable{
-	static ResourceBundle rb = ResourceBundle.getBundle("com.hqkang.SparkApp.core.Config");
+	static ResourceBundle rb = ResourceBundle.getBundle("Config");
+
 	
 	static String dbPath = "/Users/kanghuaqiang/Downloads/neo4j-community-3.1.0/data/databases/graph.db/";
 
