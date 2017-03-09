@@ -2,6 +2,10 @@ package com.hqkang.SparkApp.core;
 
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,11 +35,10 @@ public class Import {
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
 		
-		SparkSession spark = SparkSession.builder().appName("wordCount").getOrCreate();
+		SparkSession spark = SparkSession.builder().appName("wordCount").master("local").getOrCreate();
 		spark.conf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
 		spark.conf().set("spark.kryo.registrator", "MyRegistrator");
 		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
-		// Load our input data.
 		String filePath  = "000/Trajectory";
 		ResourceBundle rb = ResourceBundle.getBundle("Config");
 		int k=20;
@@ -53,41 +56,20 @@ public class Import {
 		Iterator<File> ite = file.iterator();
 		
 		String fileName = ite.next().getPath();
-		JavaPairRDD<String, MBRList> mbrRDD =  Helper.importFromFile(fileName, sc, k);
-		mbrRDD.count();
-		while(ite.hasNext()) {
-			
-			fileName = ite.next().getPath();
-			JavaPairRDD<String, MBRList> newRDD = Helper.importFromFile(fileName, sc, k).cache();
-			//newRDD.count();
-			mbrRDD =  mbrRDD.union(newRDD).cache();
-			//mbrRDD.count();
-			
-		}
-		
-		/////////////////////////
-	/*	JavaRDD<File> fileRDD = sc.parallelize(file);
-		JavaPairRDD<String, MBRList> mbrRDD =  fileRDD.map(new Function<File, JavaPairRDD<String, MBRList>>(){
+		JavaPairRDD<String, MBRList> mbrRDD =  Helper.importFromFile(filePath, sc, k);
 
-			@Override
-			public JavaPairRDD<String, MBRList> call(File v1) throws Exception {
-				// TODO Auto-generated method stub
-				JavaPairRDD<String, MBRList> mbrRDD =  Helper.importFromFile(v1.toString());
-				return mbrRDD;
-				}
-			
-		}).reduce(new Function2<JavaPairRDD<String,MBRList>,JavaPairRDD<String,MBRList>,JavaPairRDD<String,MBRList>>() {
+		try(Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j", "25519173")) {
+			String query = "call spatial.addWKTLayer('geom','wkt')";
+			 try (PreparedStatement stmt = con.prepareStatement(query)) {
 
-			@Override
-			public JavaPairRDD<String, MBRList> call(JavaPairRDD<String, MBRList> v1, JavaPairRDD<String, MBRList> v2)
-					throws Exception {
-				// TODO Auto-generated method stub
-				return v1.union(v2);
-			}});*/
-		//////////////////////
-		
-
-	
+			        try (ResultSet rs = stmt.executeQuery()) {
+			            while (rs.next()) {
+			            	
+			                System.out.println(rs.getString(1));
+			            }
+			        }
+			    }
+		} catch(Exception e) {}
 		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = Helper.store2DB(mbrRDD).cache();
 
 		databaseRDD.foreach(new VoidFunction<Tuple2<Tuple2<Integer,String>,MBR>>() {

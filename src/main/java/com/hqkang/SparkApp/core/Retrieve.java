@@ -22,6 +22,7 @@ import org.apache.spark.util.StatCounter;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.pipes.GeoPipeline;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.spark.Neo4JavaSparkContext;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -37,17 +38,17 @@ public class Retrieve {
 		
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
-		
-		SparkSession spark = SparkSession.builder().appName("wordCount").getOrCreate();
+		SparkSession spark = SparkSession.builder().appName("wordCount").master("local").config("spark.neo4j.bolt.url", "25519173").getOrCreate();
 		//spark.conf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
 		//spark.conf().set("spark.kryo.registrator", "MyRegistrator");
 		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
+		Neo4JavaSparkContext csc = Neo4JavaSparkContext.neo4jContext(sc);
 		// Load our input data.
 		ResourceBundle rb = ResourceBundle.getBundle("Config");
 		int k =20;
 		String queryFile = "20081024020959.plt";
 		String filePath  = "000/Trajectory";
-
+		
 		try{
 		    queryFile = rb.getString("queryFile");
 		    queryFile = rb.getString("importPath");
@@ -62,12 +63,10 @@ public class Retrieve {
 		
 		String fileName = ite.next().getPath();
 		
-		while(ite.hasNext()) {
-			
-			queryFile = ite.next().getPath();
-			Helper.retrieve(queryFile, sc, k);
-			
-		}
+		
+		Helper.retrieve(filePath, sc, k);
+		
+		
 		
         
 		
@@ -75,10 +74,6 @@ public class Retrieve {
 	
 	}
 
-	private static ArrayList<File> ReadAllFiles() {
-		// TODO Auto-generated method stub
-		return null;
-	}
   
 
 }

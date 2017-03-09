@@ -5,21 +5,23 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Point implements Serializable, Comparable{
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.GeometryFactory;
+
+public class Point  implements Serializable, Comparable{
 	
 	private double latitude;
 	private double longitude;
 	private Date time;
 	private int seq;
 	
-	Point() {
-	}
+	Point() {}
 	
 	Point(Date _time, double _latitude, double _longitude) {
 		latitude = _latitude;
 		longitude = _longitude;
 		time = _time;
-		
 		
 	}
 	

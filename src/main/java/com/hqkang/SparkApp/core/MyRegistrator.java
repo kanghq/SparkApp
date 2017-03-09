@@ -13,7 +13,6 @@ public class MyRegistrator implements KryoRegistrator{
 		k.register(EditableLayer.class);
 		k.register(MBR.class);
 		k.register(MBRList.class);
-		k.register(Neo4JCon.class);
 		k.register(Point.class);
 
 

@@ -72,10 +72,10 @@ public class Ret_timeFirst {
 				MBR queryMBR = t._2;
 	            ArrayList<Tuple2<String, Tuple2>> list = new ArrayList<Tuple2<String, Tuple2>>();
 
-				try (Transaction tx = new Neo4JCon().getDb().beginTx()) {
+				try (Transaction tx = new Neo4JCon_del().getDb().beginTx()) {
 		        	List<SpatialDatabaseRecord> results = null;
 		        	Envelope env = new Envelope(queryMBR.getXMin(), queryMBR.getXMax(), queryMBR.getYMin(), queryMBR.getYMax());
-		        	GeoPipeline pip = GeoPipeline.start(new Neo4JCon().getLayer(), new SearchPropertyGeo("StartTime", queryMBR.getTMax(), "LESS_THAN") ).copyDatabaseRecordProperties().propertyFilter("EndTime", queryMBR.getTMin(), FilterPipe.Filter.GREATER_THAN).intersect(new Neo4JCon().getLayer().getGeometryFactory().toGeometry(env));
+		        	GeoPipeline pip = GeoPipeline.start(new Neo4JCon_del().getLayer(), new SearchPropertyGeo("StartTime", queryMBR.getTMax(), "LESS_THAN") ).copyDatabaseRecordProperties().propertyFilter("EndTime", queryMBR.getTMin(), FilterPipe.Filter.GREATER_THAN).intersect(new Neo4JCon_del().getLayer().getGeometryFactory().toGeometry(env));
 		        	//GeoPipeline pip = GeoPipeline
 		         //           .startIntersectSearch(new Neo4JCon().getLayer(), new Neo4JCon().getLayer().getGeometryFactory().toGeometry(env)).propertyFilter("Seq", "0")
 		          //         ;
@@ -96,7 +96,7 @@ public class Ret_timeFirst {
 			            Double vol = 0.0;
 			            Geometry intersecRes = null;
 			            try {
-				            Polygon queriedPol =  new Neo4JCon().getLayer().getGeometryFactory().createPolygon(queriedGeo.getCoordinates());
+				            Polygon queriedPol =  new Neo4JCon_del().getLayer().getGeometryFactory().createPolygon(queriedGeo.getCoordinates());
 				            String TraID = (String) r.getProperty("TraID");
 				            String Seq = (String) r.getProperty("Seq");
 				            Double startTime = (Double) r.getProperty("StartTime");
@@ -105,7 +105,7 @@ public class Ret_timeFirst {
 				            
 				            System.out.println("Inters Obj"+queriedPol);
 				            if(startTime< queryMBR.getTMax() && endTime > queryMBR.getTMin()) {
-					            intersecRes = queriedPol.intersection(new Neo4JCon().getLayer().getGeometryFactory().createPolygon(queryMBR.shape()));
+					            intersecRes = queriedPol.intersection(new Neo4JCon_del().getLayer().getGeometryFactory().createPolygon(queryMBR.shape()));
 					            
 				            	section = (Polygon) intersecRes;
 					            System.out.println("Inters NEW obj"+section);

@@ -7,23 +7,32 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class PointSet extends LinkedHashSet<Point> implements Serializable{
 	TreeMap<Double, Point> xSet = new TreeMap<Double, Point>();
 	TreeMap<Double, Point> ySet = new TreeMap<Double, Point>();
 	TreeMap<Date, Point> tSet = new TreeMap<Date, Point>();
+	
 
 	
 	public boolean add(Point pt) {
 		boolean res = super.add(pt);
-		
 		xSet.put(pt.X(), pt);
 		ySet.put(pt.Y(), pt);
 		tSet.put(pt.T(), pt);
 		return res;
 	}
 	
+	public TreeMap<Date, Point> gettSet() {
+		return tSet;
+	}
+
+	public void settSet(TreeMap<Date, Point> tSet) {
+		this.tSet = tSet;
+	}
+
 	public boolean addAll(Collection <? extends Point> c) {
 		
 		boolean res = super.addAll(c);
@@ -98,5 +107,30 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 		this.ySet = ySet;
 	}
 	
+	public Point getPtSnpBefore(Long milSec) {
+		SortedMap<Date, Point> subMap = this.tSet.subMap(new Date(0), true, new Date(milSec), true);
+		return subMap.get(subMap.lastKey());
+		
+	}
+	public Point getPtSnpAfter(Long milSec) {
+		SortedMap<Date, Point> subMap = this.tSet.subMap(new Date(milSec), true, new Date(), true);
+		return subMap.get(subMap.firstKey());
+		
+	}
+	
+	
+	public Point getPtSnp(Long milSec) {
+		Point before = getPtSnpBefore(milSec);
+		Point after = getPtSnpAfter(milSec);
+		if(before.getTime().equals(after.getTime())) {
+			return after;
+		} else {
+			
+			Date dt = new Date((before.getTime().getTime()+after.getTime().getTime())/2);
+			Double lo = (before.getLongitude()+after.getLongitude())/2;
+			Double la = (before.getLatitude()+after.getLatitude()/2);
+			return new Point(dt, la, lo);
+		}
+	}
 	
 }

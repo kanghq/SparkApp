@@ -2,14 +2,14 @@ package com.hqkang.SparkApp.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeMap;
+
+
+
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -27,12 +27,15 @@ public class MBR implements Comparable,Serializable{
 		this.insidePoints.add(_lt);
 		this.insidePoints.add(_rb);		
 	}
+	
+	public MBR() {}
 
 
 	public boolean add(Point pt) {
 		this.insidePoints.add(pt);
 		return true;
 	}
+	
 	
 
 	
@@ -109,7 +112,7 @@ public class MBR implements Comparable,Serializable{
 		return seq;
 	}
 	
-	public LinearRing shape() {
+	public Polygon shape() {
 		Coordinate firstArray[] = new Coordinate[5];
 		
 		firstArray[0] = new Coordinate(this.getXMin(), this.getYMin(), this.getTMin());
@@ -118,9 +121,10 @@ public class MBR implements Comparable,Serializable{
         firstArray[3] = new Coordinate(this.getXMin(), this.getYMax(), this.getTMin());
         firstArray[4] = new Coordinate(this.getXMin(), this.getYMin(), this.getTMax());
 
-        SerializedEL traLayer = new Neo4JCon().getLayer();
-        LinearRing shell = traLayer.getGeometryFactory().createLinearRing(firstArray);
-        return shell;
+        GeometryFactory gf = new GeometryFactory();
+        LinearRing shell = gf.createLinearRing(firstArray);
+        Polygon pol = gf.createPolygon(shell);
+        return pol;
 	}
 
 
@@ -154,6 +158,8 @@ public class MBR implements Comparable,Serializable{
 	public Double getTMax() {
 		return this.insidePoints.range().get(5);
 	}
+	
+
 
 
 }

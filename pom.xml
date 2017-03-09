@@ -11,6 +11,10 @@
   <url>http://maven.apache.org</url>
 	
   <repositories>
+  <repository>
+    <id>SparkPackagesRepo</id>
+    <url>http://dl.bintray.com/spark-packages/maven</url>
+  </repository>
     <repository>
       <id>Akka repository</id>
       <url>http://repo.akka.io/releases</url>
@@ -96,6 +100,40 @@
     	<artifactId>junit</artifactId>
     	<version>3.8.2</version>
     </dependency>
+    <dependency>
+    <groupId>org.neo4j</groupId>
+    <artifactId>neo4j-jdbc-driver</artifactId>
+    <version>3.0.1</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+<dependency>
+    <groupId>joda-time</groupId>
+    <artifactId>joda-time</artifactId>
+    <version>2.9.7</version>
+</dependency>
+    <dependency>
+    <groupId>neo4j-contrib</groupId>
+    <artifactId>neo4j-spark-connector</artifactId>
+    <version>2.0.0-M2</version>
+  </dependency>
+<!-- https://mvnrepository.com/artifact/net.sf.flexjson/flexjson -->
+<dependency>
+    <groupId>net.sf.flexjson</groupId>
+    <artifactId>flexjson</artifactId>
+    <version>2.0</version>
+</dependency>
+<dependency>  
+            <groupId>com.alibaba</groupId>  
+            <artifactId>fastjson</artifactId>  
+            <version>1.2.15</version>  
+</dependency>
+<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.8.0</version>
+</dependency>
+
   </dependencies>
   <properties>
     <java.version>1.8</java.version>
@@ -130,7 +168,7 @@
 			                </includes>
 			              </artifactSet>
                         <transformers>
-                            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <transformer simplementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                 <mainClass>com.hqkang.SparkApp.core.Retrieve</mainClass>
                             </transformer>
                             <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>

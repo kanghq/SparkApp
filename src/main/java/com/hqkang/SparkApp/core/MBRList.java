@@ -53,6 +53,7 @@ public class MBRList extends java.util.LinkedList<MBR>  {
 		MBRList mbrPriList = new MBRList();
 	
 		String fileNmae = t._1();
+		Collections.sort(t._2);
 	
 		Iterator ite = t._2().iterator();
 		
