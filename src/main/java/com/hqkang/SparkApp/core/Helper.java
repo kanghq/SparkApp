@@ -49,6 +49,7 @@ import org.joda.time.*;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 import scala.Tuple2;
+import scala.Tuple3;
 
 public class Helper{
 	
@@ -318,6 +319,7 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 									            Double startTime = iMBR.getTMin();
 									            Double endTime = iMBR.getTMax();
 									            Tuple2 resultMBR = new Tuple2(Seq,TraID);
+									            boolean collision = false;
 									            
 									           // System.out.println("Inters Obj"+queriedPol);
 									            if(startTime< queryMBR.getTMax() && endTime > queryMBR.getTMin()) {
@@ -340,10 +342,17 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 									            	Point qMid = queryMBR.getInsidePoints().getPtSnp(intMid);
 									            	Point iEnd = iMBR.getInsidePoints().getPtSnp(intEnd);
 									            	Point qEnd = queryMBR.getInsidePoints().getPtSnp(intEnd);
+									            	Double disStart = iStart.distance(qStart);
+									            	Double disMid = iMid.distance(qMid);
+									            	Double disEnd = iEnd.distance(qEnd);
+									            	
+									            	if(disStart!=0&&disMid!=0&&disEnd!=0&&(disStart < 5 || disMid <5 || disEnd <5))
+									            		collision = true;
+									            	
 
 									            }
 									            
-									            list.add(new Tuple2("QT:"+queryMBR.getTraID()+"__"+TraID, new Tuple2(vol, resultMBR)));
+									            list.add(new Tuple2("QT:"+queryMBR.getTraID()+","+TraID, new Tuple2(vol, new Tuple2(resultMBR, collision))));
 								            } catch(ClassCastException | IllegalArgumentException e) {
 								            	
 								            	System.err.println("queriedMBR"+iMBR);
@@ -376,30 +385,50 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 			resultRDD.count();
 			
 
-	        JavaPairRDD<String, Double> canRDD = resultRDD.aggregateByKey(new Double(0.0), new Function2<Double, Tuple2, Double>() {
+	        JavaPairRDD<String, Tuple2<Double,Boolean>> canRDD = resultRDD.aggregateByKey(new Tuple2(new Double(0.0), new Boolean(false)), new Function2<Tuple2<Double, Boolean>, Tuple2, Tuple2<Double, Boolean>>() {
 
-				@Override
-				public Double call(Double v1, Tuple2 v2) throws Exception {
+
+
+				public Tuple2<Double, Boolean> call(Tuple2<Double, Boolean> v1, Tuple2 v2) throws Exception {
 					// TODO Auto-generated method stub
-					return v1 + (Double)v2._1;
-				}}, new Function2<Double, Double, Double>() {
+					Tuple2<Double,Tuple2> newv2 = (Tuple2<Double,Tuple2>)v2;
+					Double val = v1._1;
+					Boolean bval = v1._2;
+					val = (Double)v2._1+val;
+					bval = bval || (Boolean)newv2._2._2;
+					return new Tuple2<Double, Boolean>(val, bval);
+				}
+
+
+
+				}, new Function2<Tuple2<Double, Boolean>, Tuple2<Double, Boolean>, Tuple2<Double, Boolean>>() {
+
+
 
 					@Override
-					public Double call(Double v1, Double v2) throws Exception {
+					public Tuple2<Double, Boolean> call(Tuple2<Double, Boolean> v1, Tuple2<Double, Boolean> v2)
+							throws Exception {
 						// TODO Auto-generated method stub
-						return v1+v2;
+						Double val = v1._1;
+						Double val2 = v2._1;
+						Boolean bval = v1._2;
+						Boolean bval2 = v2._2;
+						val = val+val2;
+						bval = bval||bval2;
+						return new Tuple2<Double, Boolean>(val, bval);
 					}
 					
 				});
-	        canRDD.foreach(new VoidFunction<Tuple2<String, Double>>(){
+	        canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double, Boolean>>>(){
 
 				
 
+			
+
 				@Override
-				public void call(Tuple2<String, Double> t) throws Exception {
+				public void call(Tuple2<String, Tuple2<Double, Boolean>> t) throws Exception {
 					// TODO Auto-generated method stub
-					System.out.println(t._1+ " --"+ t._2);
-					
+					System.out.println(t._1+ ","+ t._2._1+","+t._2._2);
 				}});
 	  }
 

@@ -128,7 +128,7 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 			
 			Date dt = new Date((before.getTime().getTime()+after.getTime().getTime())/2);
 			Double lo = (before.getLongitude()+after.getLongitude())/2;
-			Double la = (before.getLatitude()+after.getLatitude()/2);
+			Double la = (before.getLatitude()+after.getLatitude())/2;
 			return new Point(dt, la, lo);
 		}
 	}
