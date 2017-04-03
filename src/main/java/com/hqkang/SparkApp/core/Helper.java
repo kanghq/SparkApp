@@ -4,14 +4,18 @@ import java.io.File;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -26,6 +30,11 @@ import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.VoidFunction;
+import org.apache.spark.broadcast.Broadcast;
+import org.apache.spark.mllib.linalg.Matrix;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,7 +60,17 @@ import flexjson.JSONSerializer;
 import scala.Tuple2;
 import scala.Tuple3;
 
+import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
+import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
+import org.apache.spark.mllib.linalg.distributed.RowMatrix;
+import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function;;
+
 public class Helper{
+	
+	
+
+	
 	
 	public static ArrayList<File> ReadAllFile(String filePath) {  
         File f = null;  
@@ -261,14 +280,14 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 	        }
 	    }
 	  
-	  public static void retrieve(String queryFile, JavaSparkContext sc, int k) {
+	  public static JavaPairRDD<String, Tuple2<Double,Boolean>> retrieve(String queryFile, JavaSparkContext sc, int k) {
 
 			
 			JavaPairRDD<String, MBRList> queRDD =  Helper.importFromFile(queryFile, sc, k);
 			
 			JavaPairRDD<Tuple2, MBR> queryRDD = Helper.toTupleKey(queRDD);
 
-			
+
 			
 		
 	      
@@ -353,6 +372,9 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 									            }
 									            
 									            list.add(new Tuple2("QT:"+queryMBR.getTraID()+","+TraID, new Tuple2(vol, new Tuple2(resultMBR, collision))));
+									         
+									            
+									            
 								            } catch(ClassCastException | IllegalArgumentException e) {
 								            	
 								            	System.err.println("queriedMBR"+iMBR);
@@ -419,6 +441,8 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 					}
 					
 				});
+	        
+
 	        canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double, Boolean>>>(){
 
 				
@@ -429,7 +453,78 @@ public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaS
 				public void call(Tuple2<String, Tuple2<Double, Boolean>> t) throws Exception {
 					// TODO Auto-generated method stub
 					System.out.println(t._1+ ","+ t._2._1+","+t._2._2);
-				}});
+			       
+					
+				}
+			});
+	        
+	        return canRDD;
+	  }
+	  
+	  
+	  public static RowMatrix PCA(JavaPairRDD<String, Tuple2<Double,Boolean>> src, int num, JavaSparkContext sc, List<File> file) {
+		  
+		  
+	        
+		  
+			Iterator<File> ite = file.iterator();
+			TreeMap<String, Long> idx = new TreeMap<String,Long>();
+			while(ite.hasNext()) {
+				String keyentry = "file:"+ite.next().getAbsolutePath().toString();
+
+				
+				idx.put(keyentry, -1L);
+			}
+			String[] mapKeys = new String[idx.size()];
+			int pos = 0;
+			for (String keyEn : idx.keySet()) {
+			    mapKeys[pos++] = keyEn;
+			}
+			
+			
+			
+			
+
+			final Broadcast<String[]> fileList = sc.broadcast(mapKeys);
+
+			
+			
+		
+		  
+		 JavaRDD<MatrixEntry> entryRDD =  src.mapPartitions(new FlatMapFunction<Iterator<Tuple2<String, Tuple2<Double, Boolean>>>, MatrixEntry>(){
+
+			@Override
+			public Iterator<MatrixEntry> call(Iterator<Tuple2<String, Tuple2<Double, Boolean>>> arg0) throws Exception {
+				// TODO Auto-generated method stub
+				
+				String[] rcvd = fileList.getValue();
+
+
+				ArrayList<MatrixEntry> entries = new ArrayList<MatrixEntry>();
+				while(arg0.hasNext()) {
+					Tuple2<String, Tuple2<Double, Boolean>> entry = arg0.next();
+					double val = entry._2._1;
+					String[] coo =  entry._1.toString().substring(3).split(",");
+					long row = Arrays.asList(rcvd).indexOf(coo[0]);
+					long col = Arrays.asList(rcvd).indexOf(coo[1]);
+					entries.add(new MatrixEntry(row,col, val));
+				}
+
+					
+					
+				return entries.iterator();
+			}
+
+			 
+		 });
+		 
+		 CoordinateMatrix mat = new CoordinateMatrix(entryRDD.rdd());
+		 RowMatrix rMat = mat.toRowMatrix();
+		 Matrix pc = (Matrix) rMat.computePrincipalComponents(1);
+		 RowMatrix projeced = rMat.multiply(pc);
+		 
+		 return projeced;
+		  
 	  }
 
 }

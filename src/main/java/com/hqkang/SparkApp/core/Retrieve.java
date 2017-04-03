@@ -4,6 +4,7 @@ package com.hqkang.SparkApp.core;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -16,7 +17,8 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.apache.spark.api.java.function.VoidFunction;
-
+import org.apache.spark.mllib.linalg.Vector;
+import org.apache.spark.mllib.linalg.distributed.RowMatrix;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.util.StatCounter;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
@@ -64,7 +66,14 @@ public class Retrieve {
 		String fileName = ite.next().getPath();
 		
 		
-		Helper.retrieve(filePath, sc, k);
+		JavaPairRDD<String, Tuple2<Double,Boolean>> retRDD = Helper.retrieve(filePath, sc, k);
+		
+		RowMatrix res = Helper.PCA(retRDD,file.size(), sc, file);
+		
+		List<Vector> vs = res.rows().toJavaRDD().collect();
+		for(Vector v: vs) {
+		    System.out.println(v);
+		}
 		
 		
 		
