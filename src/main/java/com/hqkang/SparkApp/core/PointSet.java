@@ -10,6 +10,13 @@ import java.util.LinkedHashSet;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.wololo.geojson.GeoJSON;
+import org.wololo.jts2geojson.GeoJSONWriter;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+
 public class PointSet extends LinkedHashSet<Point> implements Serializable{
 	TreeMap<Double, Point> xSet = new TreeMap<Double, Point>();
 	TreeMap<Double, Point> ySet = new TreeMap<Double, Point>();
@@ -135,5 +142,26 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 			return new Point(dt, la, lo);
 		}
 	}
+	
+	public Coordinate[] getJTSList() {
+		
+		Coordinate[] list = new Coordinate[this.tSet.size()];
+		int i = 0;
+		for(Point pt: tSet.values()) {
+			list[i] = new Coordinate(pt.toJTSPoint().getCoordinate());
+			i++;
+		}
+		return list;
+	}
+	
+	public String PS2LingString() {
+		GeometryFactory fact = new GeometryFactory();
+		LineString lines = fact.createLineString(getJTSList());
+		GeoJSONWriter writer = new GeoJSONWriter();
+		GeoJSON json = writer.write(lines);
+		return json.toString();
+	}
+	
+
 	
 }

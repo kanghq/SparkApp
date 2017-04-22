@@ -45,11 +45,11 @@ public class Point  implements Serializable, Comparable{
 	}
 	
 	public double X() {
-		return latitude;
+		return longitude;
 	}
 	
 	public double Y() {
-		return longitude;
+		return latitude;
 	}
 	
 	public Date T() {

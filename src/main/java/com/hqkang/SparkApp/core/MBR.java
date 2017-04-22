@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-
+import org.wololo.geojson.GeoJSON;
+import org.wololo.jts2geojson.GeoJSONWriter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -126,6 +126,15 @@ public class MBR implements Comparable,Serializable{
         Polygon pol = gf.createPolygon(shell);
         return pol;
 	}
+	
+	public String MBR2GeoJson() {
+		GeoJSONWriter writer = new GeoJSONWriter();
+		GeoJSON json = writer.write(shape());
+		String jsonstring = json.toString();
+		
+		return jsonstring;
+	}
+
 
 
 
