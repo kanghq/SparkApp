@@ -38,7 +38,7 @@ public class Ret_timeFirst {
 	
 	
 	public static void main(String[] args) {
-		
+		/*
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
 		
@@ -166,7 +166,7 @@ public class Ret_timeFirst {
         canRDD.count();*/
 		
 		sc.stop();
-	
+	*/
 	}
 
 	private static ArrayList<File> ReadAllFiles() {
