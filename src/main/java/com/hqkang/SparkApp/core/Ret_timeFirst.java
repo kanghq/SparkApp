@@ -25,6 +25,8 @@ import org.neo4j.gis.spatial.pipes.impl.FilterPipe;
 import org.neo4j.gis.spatial.rtree.filter.SearchAll;
 import org.neo4j.graphdb.Transaction;
 
+import com.hqkang.SparkApp.geom.MBR;
+import com.hqkang.SparkApp.geom.MBRList;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -54,7 +56,7 @@ public class Ret_timeFirst {
 
 		}
 		catch(MissingResourceException ex){}
-	
+	/*
 	
 		JavaPairRDD<String, MBRList> queRDD =  Helper.importFromFile(queryFile, sc, k);
 		
@@ -161,7 +163,7 @@ public class Ret_timeFirst {
 				
 			}});
         
-        canRDD.count();
+        canRDD.count();*/
 		
 		sc.stop();
 	

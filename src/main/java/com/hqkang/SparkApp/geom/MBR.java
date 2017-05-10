@@ -1,6 +1,7 @@
-package com.hqkang.SparkApp.core;
+package com.hqkang.SparkApp.geom;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -20,12 +21,15 @@ public class MBR implements Comparable,Serializable{
 	private PointSet insidePoints = new PointSet();
 	private String traID;
 	private String seq;
+	private double volume =-1;
+	private double mergeNextCost = -2;
 
 	
 	public MBR(Point _lt, Point _rb) {
 		
 		this.insidePoints.add(_lt);
-		this.insidePoints.add(_rb);		
+		this.insidePoints.add(_rb);
+		this.volume = this.volume();
 	}
 	
 	public MBR() {}
@@ -33,13 +37,14 @@ public class MBR implements Comparable,Serializable{
 
 	public boolean add(Point pt) {
 		this.insidePoints.add(pt);
+		this.volume = this.volume();
 		return true;
 	}
 	
 	
 
 	
-	public double volume() {
+	private double volume() {
 		return Math.abs((this.getXMax()-this.getXMin())*(this.getYMax()-this.getYMin()));
 	}
 
@@ -60,11 +65,14 @@ public class MBR implements Comparable,Serializable{
 	public boolean merge(MBR m) {
 		this.insidePoints.addAll(m.insidePoints);
 		
-		
+		this.volume = this.volume();
 		
 		return true;
 	}
-
+	
+	public double getVolume() {
+		return this.volume;
+	}
 	
 
 	
@@ -134,6 +142,28 @@ public class MBR implements Comparable,Serializable{
 		
 		return jsonstring;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof MBR))
+			return false;
+		MBR mbr = (MBR) o;
+		return mbr.getTMax().equals(this.getTMax())
+				&& mbr.getTMin().equals(this.getTMin())
+				&& mbr.getXMax().equals(this.getXMax())
+				&& mbr.getXMin().equals(this.getXMin())
+				&& mbr.getYMax().equals(this.getYMax())
+				&& mbr.getYMin().equals(this.getYMin());
+		
+	}
+	
+	@Override
+	public int hashCode() {
+		DecimalFormat fmt = new DecimalFormat("#.######E0");
+		String str = fmt.format(((this.getTMax()-this.getTMin())*(this.getXMax()-this.getXMin())*(this.getYMax()-this.getYMin())));
+		String dig = str.split("E")[0];
+		return (int) (Double.parseDouble(dig)*1000000);
+	}
 
 
 
@@ -145,7 +175,13 @@ public class MBR implements Comparable,Serializable{
 		return this.insidePoints.range().get(0);
 	}
 
+	public Double getMergeNextCost() {
+		return this.mergeNextCost;
+	}
 
+	public void setMergeNextCost(Double cost) {
+		this.mergeNextCost = cost;
+	}
 
 	public Double getXMax() {
 		return this.insidePoints.range().get(1);

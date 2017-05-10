@@ -21,10 +21,15 @@ import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.SparkSession.Builder;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
 import org.neo4j.driver.v1.Session;
+
+import com.hqkang.SparkApp.cli.SubmitParser;
+import com.hqkang.SparkApp.geom.MBR;
+import com.hqkang.SparkApp.geom.MBRList;
 
 import scala.Tuple2;
 
@@ -35,41 +40,51 @@ public class Import {
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
 		
-		SparkSession spark = SparkSession.builder().appName("wordCount").master("local").getOrCreate();
+		
+		SubmitParser parser = new SubmitParser(args);
+		//String filePath  = "000/Trajectory";
+		//ResourceBundle rb = ResourceBundle.getBundle("Config");
+		String filePath = parser.getIPath();
+		int k = parser.getSegNum();
+		int part = parser.getPart();
+		Builder  blder = 
+		 SparkSession.builder().appName("ImportSeg");
+		
+		
+		if(parser.getDebug()) {
+			blder.master("local");
+		} 
+		SparkSession spark = blder.getOrCreate();
 		spark.conf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
 		spark.conf().set("spark.kryo.registrator", "MyRegistrator");
 		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
-		String filePath  = "000/Trajectory";
-		ResourceBundle rb = ResourceBundle.getBundle("Config");
-		int k=20;
-		try{
-			filePath  = rb.getString("importPath");
-			k  = Integer.parseInt(rb.getString("k"));
-
-		} 		catch(MissingResourceException ex){}
-		
-
+		//sc.hadoopConfiguration().set("fs.s3n.awsAccessKeyId", parser.getAccessID());
+		//sc.hadoopConfiguration().set("fs.s3n.awsSecretAccessKey", parser.getSecretKey()); // can contain "/"
 
 		
 		
-		List<File> file = 	Helper.ReadAllFile(filePath);
-		Iterator<File> ite = file.iterator();
+		//List<File> file = 	Helper.ReadAllFile(filePath);
+		//Iterator<File> ite = file.iterator();
 		
-		String fileName = ite.next().getPath();
-		JavaPairRDD<String, MBRList> mbrRDD =  Helper.importFromFile(filePath, sc, k);
+		//String fileName = ite.next().getPath();
+		JavaPairRDD<String, MBRList> mbrRDD =  Helper.importFromFile(filePath, sc, k, part);
 
 		try(Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j", "25519173")) {
 			String query = "call spatial.addWKTLayer('geom','wkt')";
 			 try (PreparedStatement stmt = con.prepareStatement(query)) {
 
 			        try (ResultSet rs = stmt.executeQuery()) {
+			        	con.commit();
+			        	con.close();
 			            while (rs.next()) {
 			            	
 			                System.out.println(rs.getString(1));
 			            }
 			        }
 			    }
-		} catch(Exception e) {}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = Helper.store2DB(mbrRDD).cache();
 
 		databaseRDD.foreach(new VoidFunction<Tuple2<Tuple2<Integer,String>,MBR>>() {

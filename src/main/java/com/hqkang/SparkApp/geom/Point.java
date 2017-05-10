@@ -1,4 +1,4 @@
-package com.hqkang.SparkApp.core;
+package com.hqkang.SparkApp.geom;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -31,7 +31,7 @@ public class Point  implements Serializable, Comparable{
 		longitude = _lon;
 	}
 	
-	Point(String _date, String _time, String _latitude, String _longitude) {
+	public Point(String _date, String _time, String _latitude, String _longitude) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			time = sdf.parse(_date + " " + _time);

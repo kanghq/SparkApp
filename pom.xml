@@ -56,8 +56,11 @@
             </snapshots>
         </repository>
   </repositories>
-    
+   
   <dependencies>
+ 
+
+  
 	<dependency>
         <groupId>org.neo4j</groupId>
         <artifactId>neo4j-spatial</artifactId>
@@ -69,12 +72,15 @@
     <artifactId>spark-mllib_2.11</artifactId>
     <version>2.0.1</version>
 </dependency>
+<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
+
     
    
     <dependency> <!-- Spark dependency -->
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-core_2.11</artifactId>
       <version>2.0.1</version>
+
     </dependency>
     <dependency> <!-- Spark dependency -->
       <groupId>org.apache.spark</groupId>
@@ -90,6 +96,7 @@
     	<groupId>org.neo4j</groupId>
     	<artifactId>neo4j</artifactId>
     	<version>3.1.0</version>
+
     </dependency>
     <dependency>
     	<groupId>com.esotericsoftware</groupId>
@@ -175,10 +182,6 @@
 			                </includes>
 			              </artifactSet>
                         <transformers>
-                            <transformer simplementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                <mainClass>com.hqkang.SparkApp.core.Retrieve</mainClass>
-                            </transformer>
-                            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
 
                         </transformers>
                     </configuration>

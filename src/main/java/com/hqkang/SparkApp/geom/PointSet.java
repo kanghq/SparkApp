@@ -1,4 +1,4 @@
-package com.hqkang.SparkApp.core;
+package com.hqkang.SparkApp.geom;
 
 import java.io.Serializable;
 import java.util.ArrayList;

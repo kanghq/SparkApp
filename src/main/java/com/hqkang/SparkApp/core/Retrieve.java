@@ -20,12 +20,14 @@ import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.distributed.RowMatrix;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.SparkSession.Builder;
 import org.apache.spark.util.StatCounter;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.pipes.GeoPipeline;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.spark.Neo4JavaSparkContext;
 
+import com.hqkang.SparkApp.cli.SubmitParser;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -40,33 +42,34 @@ public class Retrieve {
 		
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
-		SparkSession spark = SparkSession.builder().appName("wordCount").master("local").config("spark.neo4j.bolt.url", "25519173").getOrCreate();
+		Builder build = SparkSession.builder().appName("Retrieve").config("spark.neo4j.bolt.url", "25519173");
+		
 		//spark.conf().set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
 		//spark.conf().set("spark.kryo.registrator", "MyRegistrator");
-		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
-		Neo4JavaSparkContext csc = Neo4JavaSparkContext.neo4jContext(sc);
+		
 		// Load our input data.
 		ResourceBundle rb = ResourceBundle.getBundle("Config");
 		int k =20;
-		String queryFile = "20081024020959.plt";
-		String filePath  = "000/Trajectory";
+		SubmitParser parser = new SubmitParser(args);
 		
-		try{
-		    queryFile = rb.getString("queryFile");
-		    queryFile = rb.getString("importPath");
-
-			k  = Integer.parseInt(rb.getString("k"));
-
-		}
-		catch(MissingResourceException ex){}
-	
+		if(parser.getDebug())
+			build.master("local");
+		SparkSession spark = build.getOrCreate();
+		JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
+		Neo4JavaSparkContext csc = Neo4JavaSparkContext.neo4jContext(sc);
+			
+		//String filePath  = "000/Trajectory";
+		//ResourceBundle rb = ResourceBundle.getBundle("Config");
+		String filePath = parser.getIPath();
+		k = parser.getSegNum();
+		int part = parser.getPart();
 		List<File> file = 	Helper.ReadAllFile(filePath);
 		Iterator<File> ite = file.iterator();
 		
 		String fileName = ite.next().getPath();
 		
 		
-		JavaPairRDD<String, Tuple2<Double,Boolean>> retRDD = Helper.retrieve(filePath, sc, k);
+		JavaPairRDD<String, Tuple2<Double,Boolean>> retRDD = Helper.retrieve(filePath, sc, k, part);
 		
 		RowMatrix res = Helper.PCA(retRDD,file.size(), sc, file);
 		
