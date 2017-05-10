@@ -63,15 +63,15 @@ public class Retrieve {
 		String filePath = parser.getIPath();
 		k = parser.getSegNum();
 		int part = parser.getPart();
-		List<File> file = 	Helper.ReadAllFile(filePath);
+		List<File> file = 	CommonHelper.ReadAllFile(filePath);
 		Iterator<File> ite = file.iterator();
 		
 		String fileName = ite.next().getPath();
 		
 		
-		JavaPairRDD<String, Tuple2<Double,Boolean>> retRDD = Helper.retrieve(filePath, sc, k, part);
+		JavaPairRDD<String, Tuple2<Double,Boolean>> retRDD = DBHelper.retrieve(filePath, sc, k, part);
 		
-		RowMatrix res = Helper.PCA(retRDD,file.size(), sc, file);
+		RowMatrix res = DBHelper.PCA(retRDD,file.size(), sc, file);
 		
 		List<Vector> vs = res.rows().toJavaRDD().collect();
 		for(Vector v: vs) {

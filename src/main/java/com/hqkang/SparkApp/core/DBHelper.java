@@ -69,111 +69,8 @@ import org.apache.spark.mllib.linalg.distributed.RowMatrix;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;;
 
-public class Helper {
+public class DBHelper {
 
-	public static ArrayList<File> ReadAllFile(String filePath) {
-		File f = null;
-		f = new File(filePath);
-		File[] files = f.listFiles(); // get all files from f folder
-		ArrayList<File> list = new ArrayList<File>();
-		for (File file : files) {
-			if (file.isDirectory()) {
-				// if file is a directory，read its files recursively
-				ReadAllFile(file.getAbsolutePath());
-			} else {
-				if (file.getName().endsWith("plt")) {
-					list.add(file);
-				}
-			}
-		}
-
-		return list;
-
-	}
-
-	public static String conString(String[] list) {
-		String str = "[";
-		for (int i = 0; i < list.length; i++) {
-
-			str += "'";
-			str += list[i].toString();
-			str += "',";
-
-		}
-		if (str.endsWith(",")) {
-			str = str.substring(0, str.length() - 1) + "]";
-		}
-		return str;
-
-	}
-
-	public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaSparkContext sc, int k, int part) {
-
-		JavaPairRDD<String, String> input = sc.wholeTextFiles(fileName);
-		
-		//System.out.println(input.count());
-		JavaPairRDD<String, LinkedList<Point>> points = input
-				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, String>, String, LinkedList<Point>>() {
-
-					/**
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public Iterator<Tuple2<String, LinkedList<Point>>> call(Tuple2<String, String> t) throws Exception {
-						// TODO Auto-generated method stub
-						ArrayList res = new ArrayList();
-						// if(!t._1.endsWith(".plt"))
-						// return res.iterator();
-						String text = t._2;
-						LinkedList<Point> ls = new LinkedList<Point>();
-						String line[] = text.split("\n");
-						for (int i = 6; i < line.length; i++) {
-
-							try {
-								String[] parts = line[i].split(",");
-								String lat = parts[0];
-								String lon = parts[1];
-								String sDate = parts[5];
-								Date date;
-								String sTime = parts[6];
-								Date time;
-								Point pt = new Point(sDate, sTime, lat, lon);
-								if (pt.getTime() == null) {
-									System.err.println("Error Point" + pt);
-								}
-								ls.add(pt);
-
-							} catch (Exception e) {
-
-							}
-						}
-						res.add(new Tuple2(t._1, ls));
-						return res.iterator();
-
-					}
-
-				});
-		points.cache();
-
-		Partitioner p = new HashPartitioner(part);
-		points.partitionBy(p);
-
-		//points.count();
-
-		JavaPairRDD<String, MBRList> mbrRDD = points
-				.mapToPair(new PairFunction<Tuple2<String, LinkedList<Point>>, String, MBRList>() {
-
-					public Tuple2<String, MBRList> call(Tuple2<String, LinkedList<Point>> t) throws Exception {
-						return MBRList.segmentationFromPoints(k, t);
-					}
-
-				}).cache();
-		//mbrRDD.count();
-		return mbrRDD;
-
-	}
 	
 	
 	static void retry(int i, int limit,Connection con, String query) {
@@ -251,7 +148,7 @@ public class Helper {
 						String[] propertyField = { ele.getTraID(), ele.getSeq(), df.format(ele.getTMin()),
 								df.format(ele.getTMax()), json };
 						String query = "CALL spatial.addWKTWithProperties('geom','" + pol.toText() + "',"
-								+ conString(property) + "," + conString(propertyField) + ")";
+								+ CommonHelper.conString(property) + "," + CommonHelper.conString(propertyField) + ")";
 						retry(0,3,con,query);
 					} //
 					con.close();
@@ -268,28 +165,7 @@ public class Helper {
 		return databaseRDD;
 	}
 
-	public static JavaPairRDD<Tuple2, MBR> toTupleKey(JavaPairRDD<String, MBRList> mbrRDD) {
-		JavaPairRDD<Tuple2, MBR> databaseRDD = mbrRDD
-				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, Tuple2, MBR>() {
-					public Iterator<Tuple2<Tuple2, MBR>> call(Tuple2<String, MBRList> t) {
-						Iterator<MBR> ite = t._2.iterator();
-						int i = 0;
-						List<Tuple2<Tuple2, MBR>> list = new ArrayList<Tuple2<Tuple2, MBR>>();
-						while (ite.hasNext()) {
 
-							MBR ele = ite.next();
-							ele.setSeq(Integer.toString(i));
-							ele.setTraID(t._1);
-							Tuple2 idx = new Tuple2(i, t._1);
-							list.add(new Tuple2(idx, ele));
-							i++;
-						}
-						return list.iterator();
-
-					}
-				}).cache();
-		return databaseRDD;
-	}
 
 	public static void printResults(Layer layer, List<SpatialDatabaseRecord> results) {
 		System.out.println("\tTesting layer '" + layer.getName() + "' (class " + layer.getClass() + "), found results: "
@@ -304,9 +180,9 @@ public class Helper {
 	public static JavaPairRDD<String, Tuple2<Double, Boolean>> retrieve(String queryFile, JavaSparkContext sc, int k,
 			int part) {
 
-		JavaPairRDD<String, MBRList> queRDD = Helper.importFromFile(queryFile, sc, k, part);
+		JavaPairRDD<String, MBRList> queRDD = CommonHelper.importFromFile(queryFile, sc, k, part);
 
-		JavaPairRDD<Tuple2, MBR> queryRDD = Helper.toTupleKey(queRDD);
+		JavaPairRDD<Tuple2, MBR> queryRDD = CommonHelper.toTupleKey(queRDD);
 
 		JavaPairRDD<String, Tuple2> resultRDD = queryRDD
 				.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<Tuple2, MBR>>, String, Tuple2>() {

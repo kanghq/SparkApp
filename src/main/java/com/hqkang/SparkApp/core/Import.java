@@ -67,7 +67,7 @@ public class Import {
 		//Iterator<File> ite = file.iterator();
 		
 		//String fileName = ite.next().getPath();
-		JavaPairRDD<String, MBRList> mbrRDD =  Helper.importFromFile(filePath, sc, k, part);
+		JavaPairRDD<String, MBRList> mbrRDD =  CommonHelper.importFromFile(filePath, sc, k, part);
 
 		try(Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j", "25519173")) {
 			String query = "call spatial.addWKTLayer('geom','wkt')";
@@ -85,7 +85,7 @@ public class Import {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = Helper.store2DB(mbrRDD).cache();
+		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = DBHelper.store2DB(mbrRDD).cache();
 
 		databaseRDD.foreach(new VoidFunction<Tuple2<Tuple2<Integer,String>,MBR>>() {
 
