@@ -163,7 +163,7 @@ public class Ret_timeFirst {
 				
 			}});
         
-        canRDD.count();*/
+        canRDD.count();
 		
 		sc.stop();
 	*/

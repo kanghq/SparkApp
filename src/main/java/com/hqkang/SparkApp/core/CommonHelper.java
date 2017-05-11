@@ -63,6 +63,7 @@ public class CommonHelper {
 		JavaPairRDD<String, String> input = sc.wholeTextFiles(fileName);
 		
 		//System.out.println(input.count());
+		input.repartition(part);
 		JavaPairRDD<String, LinkedList<Point>> points = input
 				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, String>, String, LinkedList<Point>>() {
 
@@ -108,8 +109,8 @@ public class CommonHelper {
 				});
 		points.cache();
 
-		Partitioner p = new HashPartitioner(part);
-		points.partitionBy(p);
+		//Partitioner p = new HashPartitioner(part);
+		//points.partitionBy(p);
 
 		//points.count();
 

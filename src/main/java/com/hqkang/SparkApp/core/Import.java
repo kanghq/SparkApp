@@ -39,6 +39,7 @@ public class Import {
 		// ResourceBundle rb = ResourceBundle.getBundle("Config");
 		String filePath = parser.getIPath();
 		int k = parser.getSegNum();
+		String outputPath = parser.getOPath();
 		int part = parser.getPart();
 		Builder blder = SparkSession.builder().appName("ImportSeg");
 
@@ -71,7 +72,8 @@ public class Import {
 		 * 
 		 * });
 		 */
-
+		JavaPairRDD<String, Tuple2<Double, Boolean>> resultRDD =GeoSparkHelper.retrieve(mypolygonRDD);
+		resultRDD.saveAsTextFile(outputPath);
 		sc.stop();
 
 	}

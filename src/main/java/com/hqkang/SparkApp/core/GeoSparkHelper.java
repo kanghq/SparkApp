@@ -51,6 +51,9 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.spark.Neo4JavaSparkContext;
 
+import com.hqkang.SparkApp.geom.MBR;
+import com.hqkang.SparkApp.geom.MBRList;
+import com.hqkang.SparkApp.geom.Point;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Coordinate;
