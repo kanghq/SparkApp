@@ -60,10 +60,10 @@ public class CommonHelper {
 
 	public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaSparkContext sc, int k, int part) {
 
-		JavaPairRDD<String, String> input = sc.wholeTextFiles(fileName);
+		JavaPairRDD<String, String> input = sc.wholeTextFiles(fileName, part);
 		
 		//System.out.println(input.count());
-		input.repartition(part);
+		//input.repartition(part);
 		JavaPairRDD<String, LinkedList<Point>> points = input
 				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, String>, String, LinkedList<Point>>() {
 

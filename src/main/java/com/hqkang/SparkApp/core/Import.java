@@ -78,9 +78,5 @@ public class Import {
 
 	}
 
-	private static ArrayList<File> ReadAllFiles() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

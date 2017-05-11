@@ -38,6 +38,7 @@ import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.datasyslab.geospark.enums.IndexType;
+import org.datasyslab.geospark.enums.GridType;
 import org.datasyslab.geospark.spatialOperator.JoinQuery;
 import org.datasyslab.geospark.spatialRDD.PolygonRDD;
 import org.json.simple.JSONArray;
@@ -127,9 +128,10 @@ public class GeoSparkHelper {
 
 			}
 
-		});
+		}).cache();
 		PolygonRDD geoPRDD = new PolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY());
 		try {
+			geoPRDD.spatialPartitioning(GridType.RTREE);
 			geoPRDD.buildIndex(IndexType.RTREE, true);
 
 		} catch (Exception e) {
@@ -267,7 +269,7 @@ public class GeoSparkHelper {
 					}
 
 				});
-		resultRDD.count();
+		//resultRDD.count();
 
 		JavaPairRDD<String, Tuple2<Double, Boolean>> canRDD = resultRDD.aggregateByKey(
 				new Tuple2(new Double(0.0), new Boolean(false)),
@@ -300,7 +302,7 @@ public class GeoSparkHelper {
 
 				});
 
-		canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double, Boolean>>>() {
+		/*canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double, Boolean>>>() {
 
 			@Override
 			public void call(Tuple2<String, Tuple2<Double, Boolean>> t) throws Exception {
@@ -308,7 +310,7 @@ public class GeoSparkHelper {
 				System.out.println(t._1 + "," + t._2._1 + "," + t._2._2);
 
 			}
-		});
+		});*/
 
 		return canRDD;
 	}
