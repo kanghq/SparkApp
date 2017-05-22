@@ -80,7 +80,7 @@ import org.apache.spark.api.java.function.Function;;
 public class GeoSparkHelper {
 
 
-	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int stage) {
+	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int stage) throws Exception {
 		JavaPairRDD<MBRRDDKey, MBR> databaseRDD = mbrRDD
 				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, MBRRDDKey, MBR>() {
 					public Iterator<Tuple2<MBRRDDKey, MBR>> call(Tuple2<String, MBRList> t) {
@@ -106,9 +106,13 @@ public class GeoSparkHelper {
 					}
 				});
 		JavaPairRDD<MBRRDDKey, MBR> repar = null;
+		if(-2==stage) {
+			long num = databaseRDD.count();
+			throw new Exception("NUMBER="+num);
+		}
 		if(-1!=stage) {
 		long num = databaseRDD.count();
-		System.out.println("Count::"+num);
+
 		if(num/300<1) {
 			num = 1;
 		} 
@@ -116,7 +120,7 @@ public class GeoSparkHelper {
 			num = 2500;
 		} 
 		*/else {
-			num = num/200+10;
+			num = num/200-10;
 		}
 		repar = databaseRDD.repartition((int) (num));
 		} else {
