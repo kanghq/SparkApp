@@ -29,6 +29,7 @@ public class SubmitParser {
     	options.addOption(accessID);
     	options.addOption(secretKey);
     	options.addOption(part);
+    	this.args = args;
     	
     }
     

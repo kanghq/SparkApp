@@ -24,7 +24,9 @@ import org.datasyslab.geospark.spatialRDD.PolygonRDD;
 
 import com.hqkang.SparkApp.cli.GeoSparkParser;
 import com.hqkang.SparkApp.cli.SubmitParser;
+import com.hqkang.SparkApp.geom.MBR;
 import com.hqkang.SparkApp.geom.MBRList;
+import com.hqkang.SparkApp.geom.MBRRDDKey;
 import com.vividsolutions.jts.geom.Polygon;
 
 import scala.Tuple2;
@@ -64,8 +66,11 @@ public class Import {
 
 		// String fileName = ite.next().getPath();
 		JavaPairRDD<String, MBRList> mbrRDD = CommonHelper.importFromFile(filePath, sc, k, part);
+		mbrRDD.cache();
+		JavaPairRDD<MBRRDDKey, MBR> dbrdd = GeoSparkHelper.toDBRDD(mbrRDD);
+		dbrdd.persist(StorageLevel.MEMORY_ONLY());
 
-		PolygonRDD mypolygonRDD = GeoSparkHelper.transformToPolygonRDD(mbrRDD);
+		PolygonRDD mypolygonRDD = GeoSparkHelper.transformToPolygonRDD(dbrdd);
 
 		// databaseRDD.count();
 		/*
@@ -76,7 +81,7 @@ public class Import {
 		 * 
 		 * });
 		 */
-		JavaPairRDD<String, Tuple2<Double, Boolean>> resultRDD =GeoSparkHelper.retrieve(mypolygonRDD, SaveAll, stage);
+		JavaPairRDD<String, Tuple2<Double, Boolean>> resultRDD =GeoSparkHelper.retrieve(mypolygonRDD, SaveAll, stage,dbrdd);
 		resultRDD.saveAsTextFile(outputPath+System.currentTimeMillis());
 		sc.stop();
 

@@ -15,7 +15,6 @@ public class Point  implements Serializable, Comparable{
 	private double longitude;
 	private Date time;
 	private int seq;
-	private 
 	
 	Point() {}
 	

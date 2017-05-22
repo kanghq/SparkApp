@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.hqkang.SparkApp.geom.MBR;
 import com.hqkang.SparkApp.geom.MBRList;
 import com.hqkang.SparkApp.geom.Point;
+import com.hqkang.SparkApp.geom.PointSet;
 
 public class MyRegistrator implements KryoRegistrator{
 
@@ -17,6 +18,7 @@ public class MyRegistrator implements KryoRegistrator{
 		k.register(MBR.class);
 		k.register(MBRList.class);
 		k.register(Point.class);
+		k.register(PointSet.class);
 
 
 

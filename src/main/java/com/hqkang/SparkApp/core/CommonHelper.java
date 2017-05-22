@@ -65,7 +65,7 @@ public class CommonHelper {
 		//System.out.println(input.count());
 		//input.repartition(part);
 		JavaPairRDD<String, LinkedList<Point>> points = input
-				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, String>, String, LinkedList<Point>>() {
+				.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<String, String>>, String, LinkedList<Point>>() {
 
 					/**
 					 * 
@@ -73,11 +73,14 @@ public class CommonHelper {
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					public Iterator<Tuple2<String, LinkedList<Point>>> call(Tuple2<String, String> t) throws Exception {
+					public Iterator<Tuple2<String, LinkedList<Point>>> call(Iterator<Tuple2<String, String>> s) {
 						// TODO Auto-generated method stub
 						ArrayList res = new ArrayList();
 						// if(!t._1.endsWith(".plt"))
 						// return res.iterator();
+					while(s.hasNext())
+					{
+						Tuple2<String, String> t = s.next();
 						String text = t._2;
 						LinkedList<Point> ls = new LinkedList<Point>();
 						String line[] = text.split("\n");
@@ -102,9 +105,12 @@ public class CommonHelper {
 							}
 						}
 						res.add(new Tuple2(t._1, ls));
-						return res.iterator();
+						
+					}return res.iterator();
 
 					}
+
+	
 
 				});
 		
@@ -112,7 +118,7 @@ public class CommonHelper {
 		//Partitioner p = new HashPartitioner(part);
 		//points.partitionBy(p);
 
-		//points.count();
+		//points.count();f
 
 		JavaPairRDD<String, MBRList> mbrRDD = points
 				.mapToPair(new PairFunction<Tuple2<String, LinkedList<Point>>, String, MBRList>() {
@@ -129,11 +135,15 @@ public class CommonHelper {
 	
 	public static JavaPairRDD<Tuple2, MBR> toTupleKey(JavaPairRDD<String, MBRList> mbrRDD) {
 		JavaPairRDD<Tuple2, MBR> databaseRDD = mbrRDD
-				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, Tuple2, MBR>() {
-					public Iterator<Tuple2<Tuple2, MBR>> call(Tuple2<String, MBRList> t) {
+				.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<String, MBRList>>, Tuple2, MBR>() {
+					public Iterator<Tuple2<Tuple2, MBR>> call(Iterator<Tuple2<String, MBRList>> s) throws Exception {
+						List<Tuple2<Tuple2, MBR>> list = new ArrayList<Tuple2<Tuple2, MBR>>();
+
+						while(s.hasNext())
+						{
+							Tuple2<String, MBRList>	t = s.next();
 						Iterator<MBR> ite = t._2.iterator();
 						int i = 0;
-						List<Tuple2<Tuple2, MBR>> list = new ArrayList<Tuple2<Tuple2, MBR>>();
 						while (ite.hasNext()) {
 
 							MBR ele = ite.next();
@@ -143,9 +153,12 @@ public class CommonHelper {
 							list.add(new Tuple2(idx, ele));
 							i++;
 						}
+					}
 						return list.iterator();
 
 					}
+
+			
 				});
 		return databaseRDD;
 	}
