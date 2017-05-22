@@ -29,12 +29,17 @@ public class SubmitParser {
     	options.addOption(accessID);
     	options.addOption(secretKey);
     	options.addOption(part);
+    	
+    }
+    
+    public void parse() {
     	try {
 			cmd = parser.parse(options, args);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	
     }
     
     public String getIPath() {

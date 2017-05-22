@@ -107,7 +107,7 @@ public class CommonHelper {
 					}
 
 				});
-		points.cache();
+		
 
 		//Partitioner p = new HashPartitioner(part);
 		//points.partitionBy(p);
@@ -121,7 +121,7 @@ public class CommonHelper {
 						return MBRList.segmentationFromPoints(k, t);
 					}
 
-				}).cache();
+				});
 		//mbrRDD.count();
 		return mbrRDD;
 
@@ -146,7 +146,7 @@ public class CommonHelper {
 						return list.iterator();
 
 					}
-				}).cache();
+				});
 		return databaseRDD;
 	}
 

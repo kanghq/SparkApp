@@ -22,6 +22,7 @@ import org.datasyslab.geospark.enums.IndexType;
 import org.datasyslab.geospark.spatialOperator.JoinQuery;
 import org.datasyslab.geospark.spatialRDD.PolygonRDD;
 
+import com.hqkang.SparkApp.cli.GeoSparkParser;
 import com.hqkang.SparkApp.cli.SubmitParser;
 import com.hqkang.SparkApp.geom.MBRList;
 import com.vividsolutions.jts.geom.Polygon;
@@ -34,11 +35,14 @@ public class Import {
 		// TODO Auto-generated method stub
 		// Create a Java Spark Context
 
-		SubmitParser parser = new SubmitParser(args);
+		GeoSparkParser parser = new GeoSparkParser(args);
+		parser.parse();
 		// String filePath = "000/Trajectory";
 		// ResourceBundle rb = ResourceBundle.getBundle("Config");
 		String filePath = parser.getIPath();
 		int k = parser.getSegNum();
+		int stage = parser.getStage();
+		boolean SaveAll = parser.getSaveAll();
 		String outputPath = parser.getOPath();
 		int part = parser.getPart();
 		Builder blder = SparkSession.builder().appName("ImportSeg");
@@ -72,8 +76,8 @@ public class Import {
 		 * 
 		 * });
 		 */
-		JavaPairRDD<String, Tuple2<Double, Boolean>> resultRDD =GeoSparkHelper.retrieve(mypolygonRDD);
-		resultRDD.saveAsTextFile(outputPath);
+		JavaPairRDD<String, Tuple2<Double, Boolean>> resultRDD =GeoSparkHelper.retrieve(mypolygonRDD, SaveAll, stage);
+		resultRDD.saveAsTextFile(outputPath+System.currentTimeMillis());
 		sc.stop();
 
 	}

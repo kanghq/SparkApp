@@ -21,6 +21,7 @@ import java.util.TreeMap;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.ivy.util.MemoryUtil;
 import org.apache.spark.HashPartitioner;
 import org.apache.spark.Partitioner;
 import org.apache.spark.RangePartitioner;
@@ -103,7 +104,7 @@ public class GeoSparkHelper {
 						return list.iterator();
 
 					}
-				}).cache();
+				});
 
 		JavaRDD<Polygon> myPolygonRDD = databaseRDD.map(new Function<Tuple2<Tuple2<Integer, String>, MBR>, Polygon>() {
 
@@ -118,17 +119,19 @@ public class GeoSparkHelper {
 				String[] property = { "TraID", "Seq", "StartTime", "EndTime", "MBRJSON" };
 				DecimalFormat df = new DecimalFormat("#");
 
-				String json = Gson.class.newInstance().toJson(ele);
+				//String json = Gson.class.newInstance().toJson(ele);
 
-				String[] propertyField = { ele.getTraID(), ele.getSeq(), df.format(ele.getTMin()),
-						df.format(ele.getTMax()), json };
+				//String[] propertyField = { ele.getTraID(), ele.getSeq(), df.format(ele.getTMin()),
+				//		df.format(ele.getTMax()), json };
 
-				pol.setUserData(json);
+				pol.setUserData(ele);
 				return pol;
 
 			}
 
-		}).cache();
+		});
+
+		
 		PolygonRDD geoPRDD = new PolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY());
 		try {
 			geoPRDD.spatialPartitioning(GridType.RTREE);
@@ -161,7 +164,7 @@ public class GeoSparkHelper {
 						return list.iterator();
 
 					}
-				}).cache();
+				});
 		return databaseRDD;
 	}
 
@@ -175,8 +178,8 @@ public class GeoSparkHelper {
 		}
 	}
 
-	public static JavaPairRDD<String, Tuple2<Double, Boolean>> retrieve(PolygonRDD geoPRDD) {
-
+	public static JavaPairRDD retrieve(PolygonRDD geoPRDD, boolean addAll, int stage) {
+		
 		JavaPairRDD<Polygon, HashSet<Polygon>> joinedRDD = null;
 		try {
 			joinedRDD = JoinQuery.SpatialJoinQuery(geoPRDD, geoPRDD, true, true);
@@ -196,14 +199,17 @@ public class GeoSparkHelper {
 						ArrayList<Tuple2<String, Tuple2>> list = new ArrayList<Tuple2<String, Tuple2>>();
 
 						Polygon queryPolygon = t._1;
-						JSONParser parser = new JSONParser();
-						String queryMBRJson = (String) queryPolygon.getUserData();
-						MBR queryMBR = Gson.class.newInstance().fromJson(queryMBRJson, MBR.class);
-
+					//	JSONParser parser = new JSONParser();
+					//	String queryMBRJson = (String) queryPolygon.getUserData();
+						
+						//MBR queryMBR = Gson.class.newInstance().fromJson(queryMBRJson, MBR.class);
+						MBR queryMBR = (MBR) queryPolygon.getUserData();
+						
 						for (Polygon rs : t._2) {
-							String mbrjson = (String) rs.getUserData();
+							//String mbrjson = (String) rs.getUserData();
 
-							MBR iMBR = Gson.class.newInstance().fromJson(mbrjson, MBR.class);
+							//MBR iMBR = Gson.class.newInstance().fromJson(mbrjson, MBR.class);
+							MBR iMBR = (MBR) rs.getUserData();
 							Polygon section = null;
 							Double vol = 0.0;
 							Geometry intersecRes = null;
@@ -251,9 +257,15 @@ public class GeoSparkHelper {
 										collision = true;
 
 								}
+								if(true==addAll) {
+									list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
+											new Tuple2(vol, new Tuple2(resultMBR, collision))));
 
-								list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
-										new Tuple2(vol, new Tuple2(resultMBR, collision))));
+									
+								} else if(collision) {
+									list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
+											new Tuple2(vol, new Tuple2(resultMBR, collision))));
+								}
 
 							} catch (ClassCastException | IllegalArgumentException e) {
 
@@ -269,6 +281,7 @@ public class GeoSparkHelper {
 					}
 
 				});
+
 		//resultRDD.count();
 
 		JavaPairRDD<String, Tuple2<Double, Boolean>> canRDD = resultRDD.aggregateByKey(
@@ -312,6 +325,13 @@ public class GeoSparkHelper {
 			}
 		});*/
 
+	
+		if(1==stage) {
+			return joinedRDD;
+		}
+		if(2==stage) {
+			return resultRDD;
+		}
 		return canRDD;
 	}
 
