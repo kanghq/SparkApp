@@ -80,7 +80,7 @@ import org.apache.spark.api.java.function.Function;;
 public class GeoSparkHelper {
 
 
-	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD) {
+	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int stage) {
 		JavaPairRDD<MBRRDDKey, MBR> databaseRDD = mbrRDD
 				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, MBRRDDKey, MBR>() {
 					public Iterator<Tuple2<MBRRDDKey, MBR>> call(Tuple2<String, MBRList> t) {
@@ -105,8 +105,27 @@ public class GeoSparkHelper {
 
 					}
 				});
+		JavaPairRDD<MBRRDDKey, MBR> repar = null;
+		if(-1!=stage) {
+		long num = databaseRDD.count();
+		System.out.println("Count::"+num);
+		if(num/300<1) {
+			num = 1;
+		} 
+		/*else if(num/300>2500) {
+			num = 2500;
+		} 
+		*/else {
+			num = num/200+10;
+		}
+		repar = databaseRDD.repartition((int) (num));
+		} else {
+			repar = databaseRDD;
+		}
+
 		
-		return databaseRDD;
+		
+		return repar;
 	}
 	public static PolygonRDD transformToPolygonRDD(JavaPairRDD<MBRRDDKey, MBR> databaseRDD) {
 		JavaRDD<Polygon> myPolygonRDD = databaseRDD
@@ -180,6 +199,7 @@ public class GeoSparkHelper {
 
 					}
 				});
+		
 		return databaseRDD;
 	}
 

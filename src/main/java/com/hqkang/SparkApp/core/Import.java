@@ -66,13 +66,15 @@ public class Import {
 
 		// String fileName = ite.next().getPath();
 		JavaPairRDD<String, MBRList> mbrRDD = CommonHelper.importFromFile(filePath, sc, k, part);
-		mbrRDD.cache();
-		JavaPairRDD<MBRRDDKey, MBR> dbrdd = GeoSparkHelper.toDBRDD(mbrRDD);
+		JavaPairRDD<MBRRDDKey, MBR> dbrdd = GeoSparkHelper.toDBRDD(mbrRDD, stage);
 		dbrdd.persist(StorageLevel.MEMORY_ONLY());
 
 		PolygonRDD mypolygonRDD = GeoSparkHelper.transformToPolygonRDD(dbrdd);
 
-		// databaseRDD.count();
+		if(parser.getDebug()) { 
+			System.out.println(dbrdd.count());
+		}
+		
 		/*
 		 * mypolygonRDD.foreach(new VoidFunction<Polygon>() {
 		 * 
