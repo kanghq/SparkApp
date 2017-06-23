@@ -21,6 +21,7 @@ import java.util.TreeMap;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.ivy.util.MemoryUtil;
 import org.apache.spark.HashPartitioner;
 import org.apache.spark.Partitioner;
 import org.apache.spark.RangePartitioner;
@@ -38,7 +39,10 @@ import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.datasyslab.geospark.enums.IndexType;
+import org.datasyslab.geospark.enums.GridType;
+import org.datasyslab.geospark.spatialOperator.DBJoinQuery;
 import org.datasyslab.geospark.spatialOperator.JoinQuery;
+import org.datasyslab.geospark.spatialRDD.DBPolygonRDD;
 import org.datasyslab.geospark.spatialRDD.PolygonRDD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -51,6 +55,10 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.spark.Neo4JavaSparkContext;
 
+import com.hqkang.SparkApp.geom.MBR;
+import com.hqkang.SparkApp.geom.MBRList;
+import com.hqkang.SparkApp.geom.MBRRDDKey;
+import com.hqkang.SparkApp.geom.Point;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -73,24 +81,25 @@ import org.apache.spark.api.java.function.Function;;
 
 public class GeoSparkHelper {
 
-	
 
-	public static PolygonRDD transformToPolygonRDD(JavaPairRDD<String, MBRList> mbrRDD) {
-		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = mbrRDD
-				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, Tuple2<Integer, String>, MBR>() {
-					public Iterator<Tuple2<Tuple2<Integer, String>, MBR>> call(Tuple2<String, MBRList> t) {
+	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int neosrv) throws Exception {
+		JavaPairRDD<MBRRDDKey, MBR> databaseRDD = mbrRDD
+				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, MBRRDDKey, MBR>() {
+					public Iterator<Tuple2<MBRRDDKey, MBR>> call(Tuple2<String, MBRList> t) {
 						Iterator<MBR> ite = t._2.iterator();
 						int i = 0;
-						List<Tuple2<Tuple2<Integer, String>, MBR>> list = new ArrayList<Tuple2<Tuple2<Integer, String>, MBR>>();
+						List<Tuple2<MBRRDDKey, MBR>> list = new ArrayList<Tuple2<MBRRDDKey, MBR>>();
 						try {
 							while (ite.hasNext()) {
 
 								MBR ele = ite.next();
 								ele.setSeq(Integer.toString(i));
 								ele.setTraID(t._1);
-								Tuple2 idx = new Tuple2<Integer, String>(i, t._1);
-
-								list.add(new Tuple2<Tuple2<Integer, String>, MBR>(idx, ele));
+								//MBRRDDKey idx = new MBRRDDKey(i, t._1);
+								MBRRDDKey idx = new MBRRDDKey(t._1, i);
+								idx.setStartTime(ele.getTMin());
+								idx.setEndTime(ele.getTMax());		
+								list.add(new Tuple2<MBRRDDKey, MBR>(idx, ele));
 								i++;
 							}
 
@@ -99,35 +108,62 @@ public class GeoSparkHelper {
 						return list.iterator();
 
 					}
-				}).cache();
+				});
+		JavaPairRDD<MBRRDDKey, MBR> repar = null;
+		
+		//repar = databaseRDD.repartition(neosrv);
+		repar = databaseRDD;
+		
+		
+		
 
-		JavaRDD<Polygon> myPolygonRDD = databaseRDD.map(new Function<Tuple2<Tuple2<Integer, String>, MBR>, Polygon>() {
+		
+		
+		return repar;
+	}
+	public static DBPolygonRDD transformToPolygonRDD(JavaPairRDD<MBRRDDKey, MBR> databaseRDD, int neoSrv) {
+		JavaRDD<Polygon> myPolygonRDD = databaseRDD
+				.mapPartitions(new FlatMapFunction<Iterator<Tuple2<MBRRDDKey, MBR>>, Polygon>() {
 
-			@Override
-			public Polygon call(Tuple2<Tuple2<Integer, String>, MBR> t) throws Exception {
-				// TODO Auto-generated method stub
+					@Override
+					public Iterator<Polygon> call(Iterator<Tuple2<MBRRDDKey, MBR>> t) throws Exception {
+						// TODO Auto-generated method stub
+						ArrayList<Polygon> list = new ArrayList<Polygon>();
+						while (t.hasNext()) {
+							Tuple2<MBRRDDKey, MBR> tu = t.next();
+							MBR ele = tu._2;
 
-				Tuple2<Tuple2<Integer, String>, MBR> tu = t;
-				MBR ele = tu._2;
+							Polygon pol = ele.shape();
+							String[] property = { "TraID", "Seq", "StartTime", "EndTime", "MBRJSON" };
+							DecimalFormat df = new DecimalFormat("#");
 
-				Polygon pol = ele.shape();
-				String[] property = { "TraID", "Seq", "StartTime", "EndTime", "MBRJSON" };
-				DecimalFormat df = new DecimalFormat("#");
+							// String json =
+							 //Gson.class.newInstance().toJson(ele);
 
-				String json = Gson.class.newInstance().toJson(ele);
+							// String[] propertyField = { ele.getTraID(),
+							// ele.getSeq(), df.format(ele.getTMin()),
+							// df.format(ele.getTMax()), json };
 
-				String[] propertyField = { ele.getTraID(), ele.getSeq(), df.format(ele.getTMin()),
-						df.format(ele.getTMax()), json };
+							 //pol.setUserData(ele);
+							 pol.setUserData(tu._1);
+							list.add(pol);
 
-				pol.setUserData(json);
-				return pol;
+						}
+						return list.iterator();
 
-			}
+					}
+				});
+		
+		
+		//myPolygonRDD.repartition(neoSrv);
+		DBPolygonRDD geoPRDD = new DBPolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY(), neoSrv);
 
-		});
-		PolygonRDD geoPRDD = new PolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY());
 		try {
+			geoPRDD.spatialPartitioning(GridType.RTREE,neoSrv);
 			geoPRDD.buildIndex(IndexType.RTREE, true);
+
+			//geoPRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY());
+			//geoPRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY());
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -156,49 +192,121 @@ public class GeoSparkHelper {
 						return list.iterator();
 
 					}
-				}).cache();
+				});
+		
 		return databaseRDD;
 	}
 
-	public static void printResults(Layer layer, List<SpatialDatabaseRecord> results) {
-		System.out.println("\tTesting layer '" + layer.getName() + "' (class " + layer.getClass() + "), found results: "
-				+ results.size());
-		for (SpatialDatabaseRecord r : results) {
-			System.out.println("\t\tGeometry: " + r);
-			Geometry geo = r.getGeometry();
-			System.out.println(geo);
-		}
-	}
 
-	public static JavaPairRDD<String, Tuple2<Double, Boolean>> retrieve(PolygonRDD geoPRDD) {
 
+	public static JavaPairRDD retrieve(DBPolygonRDD geoPRDD, boolean addAll,JavaPairRDD<MBRRDDKey, MBR> databaseRDD, int DBNum) {
 		JavaPairRDD<Polygon, HashSet<Polygon>> joinedRDD = null;
 		try {
-			joinedRDD = JoinQuery.SpatialJoinQuery(geoPRDD, geoPRDD, true, true);
+			joinedRDD = DBJoinQuery.SpatialJoinQuery(geoPRDD, geoPRDD, true, true, DBNum); //use index, consider !contains only?
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-		JavaPairRDD<String, Tuple2> resultRDD = joinedRDD
-				.flatMapToPair(new PairFlatMapFunction<Tuple2<Polygon, HashSet<Polygon>>, String, Tuple2>() {
+		JavaPairRDD<Polygon,Polygon> flattenedRDD = joinedRDD.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<Polygon,HashSet<Polygon>>>,Polygon,Polygon>() {
+
+			@Override
+			public Iterator<Tuple2<Polygon, Polygon>> call(Iterator<Tuple2<Polygon, HashSet<Polygon>>> s) {
+				
+				// TODO Auto-generated method stub
+				ArrayList<Tuple2<Polygon, Polygon>> list = new ArrayList<Tuple2<Polygon, Polygon>>();
+				while(s.hasNext())
+				{
+					Tuple2<Polygon, HashSet<Polygon>> t =s.next();
+				Polygon key = t._1;
+				
+				for(Polygon val:t._2) {
+					//if(key.getCoordinates()[4].z>val.getCoordinates()[0].z&&key.getCoordinates()[0].z<val.getCoordinates()[4].z)
+					list.add(new Tuple2(key,val));
+				}
+				
+				}
+				
+				return list.iterator();
+			}
+
+		
+			
+		} );
+		
+
+
+		
+		JavaPairRDD<MBRRDDKey,Tuple2<MBRRDDKey,MBRRDDKey>> st1RDD =  flattenedRDD.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<Polygon,Polygon>>,MBRRDDKey,Tuple2<MBRRDDKey,MBRRDDKey>>() {
+
+			@Override
+			public Iterator<Tuple2<MBRRDDKey, Tuple2<MBRRDDKey, MBRRDDKey>>> call(Iterator<Tuple2<Polygon, Polygon>> s)
+					throws Exception {
+				// TODO Auto-generated method stub
+				
+				ArrayList<Tuple2<MBRRDDKey,Tuple2<MBRRDDKey,MBRRDDKey>>> list = new 	ArrayList<Tuple2<MBRRDDKey,Tuple2<MBRRDDKey,MBRRDDKey>>>();
+				while(s.hasNext())
+				{
+					Tuple2<Polygon, Polygon> t = s.next();
+				
+				list.add(new Tuple2((MBRRDDKey)t._2.getUserData(), new Tuple2<MBRRDDKey,MBRRDDKey>((MBRRDDKey)t._1.getUserData(),(MBRRDDKey)t._2.getUserData())));
+			}
+				return list.iterator();
+			}
+
+
+			
+		});
+		/*
+		 * 
+			<Polygon1,Polygon2>
+			flatmaptopair
+			<MBRRDD2<MBRRRDD1,MBRRDD2>>
+			join
+			<MBRRDD2<<MBRRDD1,MBRRDD2>,MBR2>>
+			flatmaptopair
+			<MBRRDD1,MBR2>
+			join
+			<MBRRDD1,<MBR2，MBR1>>
+			values
+			<MBR2,MBR1>
+		 * */
+		
+		JavaPairRDD<MBRRDDKey,Tuple2<Tuple2<MBRRDDKey,MBRRDDKey>,MBR>> st2RDD = st1RDD.join(databaseRDD);
+		JavaPairRDD<MBRRDDKey,MBR> st3RDD = st2RDD.flatMapToPair(new PairFlatMapFunction<Tuple2<MBRRDDKey,Tuple2<Tuple2<MBRRDDKey,MBRRDDKey>,MBR>>,MBRRDDKey,MBR>() {
+
+			@Override
+			public Iterator<Tuple2<MBRRDDKey, MBR>> call(Tuple2<MBRRDDKey, Tuple2<Tuple2<MBRRDDKey, MBRRDDKey>, MBR>> t)
+					throws Exception {
+				// TODO Auto-generated method stub
+				ArrayList<Tuple2<MBRRDDKey,MBR>> list = new ArrayList<Tuple2<MBRRDDKey,MBR>>();
+				list.add(new Tuple2(t._2._1._1,t._2._2));
+				return list.iterator();
+			}
+			
+		});
+		JavaPairRDD<MBRRDDKey,Tuple2<MBR,MBR>> st4RDD = st3RDD.join(databaseRDD);
+		JavaRDD<Tuple2<MBR,MBR>> st5RDD = st4RDD.values();
+
+
+		JavaPairRDD<String, Tuple2> resultRDD = st5RDD
+				.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<MBR,MBR>>,String,Tuple2>() {
 
 					@Override
-					public Iterator<Tuple2<String, Tuple2>> call(Tuple2<Polygon, HashSet<Polygon>> t) throws Exception { // TODO
+					public Iterator<Tuple2<String, Tuple2>> call(Iterator<Tuple2<MBR, MBR>> s) throws Exception {
 																															// Auto-generated
 																															// method
 																															// stub
 						ArrayList<Tuple2<String, Tuple2>> list = new ArrayList<Tuple2<String, Tuple2>>();
 
-						Polygon queryPolygon = t._1;
-						JSONParser parser = new JSONParser();
-						String queryMBRJson = (String) queryPolygon.getUserData();
-						MBR queryMBR = Gson.class.newInstance().fromJson(queryMBRJson, MBR.class);
-
-						for (Polygon rs : t._2) {
-							String mbrjson = (String) rs.getUserData();
-
-							MBR iMBR = Gson.class.newInstance().fromJson(mbrjson, MBR.class);
+			
+						 while(s.hasNext())
+						 {
+							 Tuple2<MBR, MBR>	 t=s.next();
+						 MBR queryMBR = t._1;
+						 	
+							 MBR iMBR = t._2;
+							
 							Polygon section = null;
 							Double vol = 0.0;
 							Geometry intersecRes = null;
@@ -211,13 +319,11 @@ public class GeoSparkHelper {
 								Tuple2 resultMBR = new Tuple2(Seq, TraID);
 								boolean collision = false;
 
-								// System.out.println("Inters Obj"+queriedPol);
 								if (startTime < queryMBR.getTMax() && endTime > queryMBR.getTMin()) {
 									intersecRes = queriedPol.intersection(queryMBR.shape());
 
 									section = (Polygon) intersecRes;
-									// System.out.println("Inters NEW
-									// obj"+section);
+									
 									vol = section.getArea();
 								} else {
 									vol = 0.0;
@@ -246,9 +352,14 @@ public class GeoSparkHelper {
 										collision = true;
 
 								}
+								if (true == addAll) {
+									list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
+											new Tuple2(vol, new Tuple2(resultMBR, collision))));
 
-								list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
-										new Tuple2(vol, new Tuple2(resultMBR, collision))));
+								} else if (collision) {
+									list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
+											new Tuple2(vol, new Tuple2(resultMBR, collision))));
+								}
 
 							} catch (ClassCastException | IllegalArgumentException e) {
 
@@ -258,13 +369,20 @@ public class GeoSparkHelper {
 								vol = 0.0;
 							}
 
-						}
+						
 
-						return list.iterator();
+					}
+					
+							return list.iterator();
+
+
 					}
 
+			
+
 				});
-		resultRDD.count();
+
+		//System.out.println(resultRDD.collect());
 
 		JavaPairRDD<String, Tuple2<Double, Boolean>> canRDD = resultRDD.aggregateByKey(
 				new Tuple2(new Double(0.0), new Boolean(false)),
@@ -297,16 +415,18 @@ public class GeoSparkHelper {
 
 				});
 
-		canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double, Boolean>>>() {
+		/*
+		 * canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double,
+		 * Boolean>>>() {
+		 * 
+		 * @Override public void call(Tuple2<String, Tuple2<Double, Boolean>> t)
+		 * throws Exception { // TODO Auto-generated method stub
+		 * System.out.println(t._1 + "," + t._2._1 + "," + t._2._2);
+		 * 
+		 * } });
+		 */
 
-			@Override
-			public void call(Tuple2<String, Tuple2<Double, Boolean>> t) throws Exception {
-				// TODO Auto-generated method stub
-				System.out.println(t._1 + "," + t._2._1 + "," + t._2._2);
-
-			}
-		});
-
+		
 		return canRDD;
 	}
 
@@ -360,6 +480,16 @@ public class GeoSparkHelper {
 
 		return projeced;
 
+	}
+	
+	public static void printResults(Layer layer, List<SpatialDatabaseRecord> results) {
+		System.out.println("\tTesting layer '" + layer.getName() + "' (class " + layer.getClass() + "), found results: "
+				+ results.size());
+		for (SpatialDatabaseRecord r : results) {
+			System.out.println("\t\tGeometry: " + r);
+			Geometry geo = r.getGeometry();
+			System.out.println(geo);
+		}
 	}
 
 }

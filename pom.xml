@@ -65,7 +65,13 @@
         <groupId>org.neo4j</groupId>
         <artifactId>neo4j-spatial</artifactId>
         <version>0.19-neo4j-3.0.3</version>
-    </dependency>
+        <exclusions>
+        	<exclusion>
+        		<groupId>com.vividsolutions</groupId>
+        		<artifactId>jts</artifactId>
+        	</exclusion>
+        </exclusions>
+	</dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib_2.10 -->
 <dependency>
     <groupId>org.apache.spark</groupId>
@@ -92,6 +98,12 @@
     	<groupId>org.datasyslab</groupId>
     	<artifactId>geospark</artifactId>
     	<version>0.6.1-snapshot</version>
+    	<exclusions>
+    		<exclusion>
+    			<groupId>com.vividsolutions</groupId>
+    			<artifactId>jts-core</artifactId>
+    		</exclusion>
+    	</exclusions>
 	</dependency>
 
     <dependency>
@@ -149,6 +161,12 @@
     <artifactId>gson</artifactId>
     <version>2.8.0</version>
 </dependency>
+<dependency>
+      <groupId>org.datasyslab</groupId>
+      <artifactId>JTSplus</artifactId>
+      <version>0.1.2</version>
+      <scope>compile</scope>
+    </dependency>
 
   </dependencies>
   <properties>

@@ -38,6 +38,7 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.neo4j.driver.v1.exceptions.ClientException;
 import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
@@ -71,35 +72,54 @@ import org.apache.spark.api.java.function.Function;;
 
 public class DBHelper {
 
-	
-	
-	static void retry(int i, int limit,Connection con, String query) {
+	public static void retry(int i, int limit, Connection con, String query) throws Exception {
 		try (PreparedStatement stmt = con.prepareStatement(query)) {
-			con.setAutoCommit(false);
+			// con.setAutoCommit(false);
 
-			ResultSet rs = stmt.executeQuery();
+			//ResultSet rs = stmt.executeQuery();
+			con.setAutoCommit(false);
+			stmt.execute();
 			con.commit();
-			con.setAutoCommit(true);
-		
-			
-		} catch (SQLException e1) {
+			// con.setAutoCommit(true);
+			return;
+		} 	
+			catch (Exception e1) {
+				if(e1.getMessage().contains("layer"))
+				{
+					System.err.println("existing layer");
+					return;
+				}
+				
+				
 			// TODO Auto-generated catch block
+			/*
 			try {
 				con.rollback();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				
 			}
-			if( i >= limit) {
+			*/
+			
+			if (i >= limit) {
 				throw new RuntimeException(e1);
 			}
 			
-			e1.printStackTrace();
-			retry(i++,3,con,query);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				con.setAutoCommit(true);
+			}
+			retry(i++, limit, con, query);
+		} finally{
+			con.setAutoCommit(true);
 		}
-		
+
 	}
-	
 
 	public static JavaPairRDD<Tuple2<Integer, String>, MBR> store2DB(JavaPairRDD<String, MBRList> mbrRDD) {
 		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = mbrRDD
@@ -125,15 +145,17 @@ public class DBHelper {
 						return list.iterator();
 
 					}
-				}).cache();
-		//databaseRDD.count();
+				});
+		// databaseRDD.count();
 		databaseRDD.foreachPartition(new VoidFunction<Iterator<Tuple2<Tuple2<Integer, String>, MBR>>>() {
 
 			@Override
 			public void call(Iterator<Tuple2<Tuple2<Integer, String>, MBR>> t) throws Exception {
 				// TODO Auto-generated method stub
 				try (Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j", "25519173")) {
-					long cnt=0;
+					long cnt = 0;
+					con.setAutoCommit(false);
+
 					while (t.hasNext()) {
 						cnt++;
 						Tuple2<Tuple2<Integer, String>, MBR> tu = t.next();
@@ -149,23 +171,22 @@ public class DBHelper {
 								df.format(ele.getTMax()), json };
 						String query = "CALL spatial.addWKTWithProperties('geom','" + pol.toText() + "',"
 								+ CommonHelper.conString(property) + "," + CommonHelper.conString(propertyField) + ")";
-						retry(0,3,con,query);
+						//retry(0, 3, con, query);
+						 PreparedStatement stmt = con.prepareStatement(query);
+
+						stmt.execute();
+						 con.commit();
 					} //
 					con.close();
-				} catch(Exception e) {
-					e.printStackTrace();
-				} finally{
-					
-				}
+				} 
 
 			}
 
 		});
+		System.out.println(databaseRDD.count());
 
 		return databaseRDD;
 	}
-
-
 
 	public static void printResults(Layer layer, List<SpatialDatabaseRecord> results) {
 		System.out.println("\tTesting layer '" + layer.getName() + "' (class " + layer.getClass() + "), found results: "
@@ -177,10 +198,8 @@ public class DBHelper {
 		}
 	}
 
-	public static JavaPairRDD<String, Tuple2<Double, Boolean>> retrieve(String queryFile, JavaSparkContext sc, int k,
-			int part) {
-
-		JavaPairRDD<String, MBRList> queRDD = CommonHelper.importFromFile(queryFile, sc, k, part);
+	public static JavaPairRDD<String, Tuple2<Double, Boolean>> retrieve(JavaPairRDD<String, MBRList> queRDD,
+			JavaSparkContext sc, int k, int part) {
 
 		JavaPairRDD<Tuple2, MBR> queryRDD = CommonHelper.toTupleKey(queRDD);
 
@@ -191,13 +210,13 @@ public class DBHelper {
 					public Iterator<Tuple2<String, Tuple2>> call(Iterator<Tuple2<Tuple2, MBR>> t) throws Exception {
 						// TODO Auto-generated method stub
 						ArrayList<Tuple2<String, Tuple2>> list = new ArrayList<Tuple2<String, Tuple2>>();
+						try (Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j",
+								"25519173")) {
+							con.setAutoCommit(false);
+							while (t.hasNext()) {
+								Tuple2<Tuple2, MBR> t1 = t.next();
+								MBR queryMBR = t1._2;
 
-						while (t.hasNext()) {
-							Tuple2<Tuple2, MBR> t1 = t.next();
-							MBR queryMBR = t1._2;
-
-							try (Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://localhost", "neo4j",
-									"25519173")) {
 								Envelope env = new Envelope(queryMBR.getXMin(), queryMBR.getXMax(), queryMBR.getYMin(),
 										queryMBR.getYMax());
 
@@ -208,20 +227,33 @@ public class DBHelper {
 										+ "))";
 
 								String query = "CALL spatial.intersects('geom','" + queryStr
-										+ "') YIELD node RETURN node";
+										+ "') YIELD node RETURN node.MBRJSON";
 								try (PreparedStatement stmt = con.prepareStatement(query)) {
-
+									con.commit();
 									try (ResultSet rs = stmt.executeQuery()) {
 										JSONParser parser = new JSONParser();
 										while (rs.next()) {
 											String jsonStr = rs.getString(1);
-											jsonStr = jsonStr.replaceAll("\"\\{\"", "\\{\"");
-											jsonStr = jsonStr.replaceAll("\"\\}\"", "\"\\}");
-											Map<String, Object> node = (Map) JSON.parse(jsonStr);
-											Map<String, Object> mbrMap = (Map<String, Object>) node.get("MBRJSON");
-											String mbrjson = JSON.toJSONString(mbrMap);
+											// System.out.println(jsonStr);
+											// jsonStr =
+											// jsonStr.replaceAll("\"\\{\"",
+											// "\\{\"");
+											// jsonStr =
+											// jsonStr.replaceAll("\"\\}\"",
+											// "\"\\}");
+											// Map<String, Object> node = (Map)
+											// JSON.parse(jsonStr);
+											// Map<String, Object> mbrMap =
+											// (Map<String, Object>)
+											// node.get("MBRJSON");
+											// String mbrjson =
+											// JSON.toJSONString(mbrMap);
 
-											MBR iMBR = Gson.class.newInstance().fromJson(mbrjson, MBR.class);
+											// MBR iMBR =
+											// Gson.class.newInstance().fromJson(mbrjson,
+											// MBR.class);
+											MBR iMBR = Gson.class.newInstance().fromJson(jsonStr, MBR.class);
+
 											Polygon section = null;
 											Double vol = 0.0;
 											Geometry intersecRes = null;
@@ -289,17 +321,14 @@ public class DBHelper {
 									;
 								}
 
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							;
-
-						}
+							} // while
+						} catch (Exception e) {
+							e.printStackTrace();
+						} // try
 						return list.iterator();
 					}
 
 				});
-		resultRDD.count();
 
 		JavaPairRDD<String, Tuple2<Double, Boolean>> canRDD = resultRDD.aggregateByKey(
 				new Tuple2(new Double(0.0), new Boolean(false)),
@@ -331,16 +360,16 @@ public class DBHelper {
 					}
 
 				});
-
-		canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double, Boolean>>>() {
-
-			@Override
-			public void call(Tuple2<String, Tuple2<Double, Boolean>> t) throws Exception {
-				// TODO Auto-generated method stub
-				System.out.println(t._1 + "," + t._2._1 + "," + t._2._2);
-
-			}
-		});
+		/*
+		 * canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double,
+		 * Boolean>>>() {
+		 * 
+		 * @Override public void call(Tuple2<String, Tuple2<Double, Boolean>> t)
+		 * throws Exception { // TODO Auto-generated method stub
+		 * System.out.println(t._1 + "," + t._2._1 + "," + t._2._2);
+		 * 
+		 * } });
+		 */
 
 		return canRDD;
 	}

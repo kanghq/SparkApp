@@ -60,7 +60,8 @@ public class CommonHelper {
 
 	public static JavaPairRDD<String, MBRList> importFromFile(String fileName, JavaSparkContext sc, int k, int part) {
 
-		JavaPairRDD<String, String> input = sc.wholeTextFiles(fileName);
+		JavaPairRDD<String, String> input = sc.wholeTextFiles(fileName,part);
+		
 		
 		//System.out.println(input.count());
 		JavaPairRDD<String, LinkedList<Point>> points = input
