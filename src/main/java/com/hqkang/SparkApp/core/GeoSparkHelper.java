@@ -82,7 +82,7 @@ import org.apache.spark.api.java.function.Function;;
 public class GeoSparkHelper {
 
 
-	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int neosrv) throws Exception {
+	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int neosrv,int MBRTimeInteral) throws Exception {
 		JavaPairRDD<MBRRDDKey, MBR> databaseRDD = mbrRDD
 				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, MBRRDDKey, MBR>() {
 					public Iterator<Tuple2<MBRRDDKey, MBR>> call(Tuple2<String, MBRList> t) {
@@ -97,8 +97,8 @@ public class GeoSparkHelper {
 								ele.setTraID(t._1);
 								//MBRRDDKey idx = new MBRRDDKey(i, t._1);
 								MBRRDDKey idx = new MBRRDDKey(t._1, i);
-								idx.setStartTime(ele.getTMin());
-								idx.setEndTime(ele.getTMax());		
+								idx.setStartTime(ele.getTMin()/(MBRTimeInteral*3600000));
+								idx.setEndTime(ele.getTMax()/(MBRTimeInteral*3600000));		
 								list.add(new Tuple2<MBRRDDKey, MBR>(idx, ele));
 								i++;
 							}
@@ -156,11 +156,12 @@ public class GeoSparkHelper {
 		
 		
 		//myPolygonRDD.repartition(neoSrv);
-		DBPolygonRDD geoPRDD = new DBPolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY(), neoSrv);
+		DBPolygonRDD geoPRDD = new DBPolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY_SER(), neoSrv);
 
 		try {
 			geoPRDD.spatialPartitioning(GridType.RTREE,neoSrv);
 			geoPRDD.buildIndex(IndexType.RTREE, true);
+			geoPRDD.rawSpatialRDD.unpersist();
 
 			//geoPRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY());
 			//geoPRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY());

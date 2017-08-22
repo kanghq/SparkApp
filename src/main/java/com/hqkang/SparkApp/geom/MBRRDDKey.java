@@ -41,7 +41,7 @@ public class MBRRDDKey extends Tuple2<String, Integer>{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		
 		//this.startTime = Integer.parseInt(sdf.format(new Date((long)milSec)));
-		this.startTime= (int) (milSec/86400000);
+		this.startTime= (int) (milSec);
 	}
 
 
@@ -54,7 +54,7 @@ public class MBRRDDKey extends Tuple2<String, Integer>{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 		//this.endTime = Integer.parseInt(sdf.format(new Date((long)milSec)));
-		 this.endTime = (int) (milSec/86400000);
+		 this.endTime = (int) (milSec);
 	}
 	
 

@@ -4,7 +4,7 @@
 
   <groupId>com.hqkang</groupId>
   <artifactId>SparkApp</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>3.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>SparkApp</name>
@@ -120,7 +120,7 @@
     <dependency>
     	<groupId>org.neo4j.driver</groupId>
     	<artifactId>neo4j-java-driver</artifactId>
-    	<version>1.0.6</version>
+    	<version>1.4.0</version>
     </dependency>
 
     <dependency>

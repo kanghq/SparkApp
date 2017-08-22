@@ -74,17 +74,18 @@ public class DBHelper {
 
 	public static void retry(int i, int limit, Connection con, String query) throws Exception {
 		try (PreparedStatement stmt = con.prepareStatement(query)) {
-			// con.setAutoCommit(false);
+			//con.setAutoCommit(false);
 
 			//ResultSet rs = stmt.executeQuery();
-			con.setAutoCommit(false);
 			stmt.execute();
-			con.commit();
+			//con.commit();
+			
 			// con.setAutoCommit(true);
-			return;
+			//return;
 		} 	
 			catch (Exception e1) {
-				if(e1.getMessage().contains("layer"))
+				e1.printStackTrace();
+				if(e1.getMessage()!=null&&e1.getMessage().contains("existing layer"))
 				{
 					System.err.println("existing layer");
 					return;
@@ -99,6 +100,8 @@ public class DBHelper {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				
+			}  finally {
+				con.setAutoCommit(true);
 			}
 			*/
 			
@@ -111,12 +114,10 @@ public class DBHelper {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} finally {
-				con.setAutoCommit(true);
 			}
-			retry(i++, limit, con, query);
+			retry(++i, limit, con, query);
 		} finally{
-			con.setAutoCommit(true);
+			//con.setAutoCommit(true);
 		}
 
 	}
