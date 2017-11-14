@@ -43,8 +43,10 @@ public class Import {
 		// ResourceBundle rb = ResourceBundle.getBundle("Config");
 		String filePath = parser.getIPath();
 		int k = parser.getSegNum();
-		int stage = parser.getStage();
+		int margin = parser.getMargin();
 		boolean SaveAll = parser.getSaveAll();
+		boolean stat = parser.getStat();
+
 		String outputPath = parser.getOPath();
 		int part = parser.getPart();
 		Builder blder = SparkSession.builder().appName("ImportSeg");
@@ -66,10 +68,20 @@ public class Import {
 
 		// String fileName = ite.next().getPath();
 		JavaPairRDD<String, MBRList> mbrRDD = CommonHelper.importFromFile(filePath, sc, k, part);
-		JavaPairRDD<MBRRDDKey, MBR> dbrdd = GeoSparkHelper.toDBRDD(mbrRDD, stage);
+		JavaPairRDD<MBRRDDKey, MBR> dbrdd = GeoSparkHelper.toDBRDD(mbrRDD, margin);
 		dbrdd.persist(StorageLevel.MEMORY_ONLY());
 
-		PolygonRDD mypolygonRDD = GeoSparkHelper.transformToPolygonRDD(dbrdd);
+		PolygonRDD mypolygonRDD = GeoSparkHelper.transformToPolygonRDD(dbrdd, margin);
+		String currentPath = outputPath+System.currentTimeMillis();
+
+		if(stat) {
+		List<Long> statList = new ArrayList<Long>();
+		Long num = mypolygonRDD.spatialPartitionedRDD.count();
+		statList.add(num);
+		JavaRDD<Long> statRDD =  sc.parallelize(statList);
+		
+		statRDD.saveAsTextFile(currentPath+"/stat/");
+		} else {
 
 		if(parser.getDebug()) { 
 			System.out.println(dbrdd.count());
@@ -83,8 +95,11 @@ public class Import {
 		 * 
 		 * });
 		 */
-		JavaPairRDD<String, Tuple2<Double, Boolean>> resultRDD =GeoSparkHelper.retrieve(mypolygonRDD, SaveAll, stage,dbrdd);
-		resultRDD.saveAsTextFile(outputPath+System.currentTimeMillis());
+		JavaPairRDD<String, Tuple2<Double, Boolean>> resultRDD =GeoSparkHelper.retrieve(mypolygonRDD, SaveAll, margin,dbrdd);
+		System.out.println(resultRDD.count());
+		resultRDD.saveAsTextFile(currentPath);
+		}
+		
 		sc.stop();
 
 	}

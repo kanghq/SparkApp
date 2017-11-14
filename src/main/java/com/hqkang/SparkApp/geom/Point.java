@@ -136,5 +136,21 @@ public class Point  implements Serializable, Comparable{
 
 	    return Math.sqrt(distance);
 	}
+	
+	public static double marginLong(double meter) {
+		final int R = 6371;
+		double lonRadians = meter/R;
+		double lonDeg = Math.toDegrees(lonRadians);
+		return lonDeg;
+		
+	}
+	
+	public static double marginLat(double meter, double longitude) {
+		final int R = 6371;
+		double R2 = R*Math.cos(longitude);
+		double latRadians = meter/R2;
+		double latDeg = Math.toDegrees(latRadians);
+		return latDeg;
+	}
 
 }

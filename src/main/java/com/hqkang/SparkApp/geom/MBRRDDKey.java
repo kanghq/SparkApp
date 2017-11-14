@@ -2,10 +2,10 @@ package com.hqkang.SparkApp.geom;
 
 import scala.Tuple2;
 
-public class MBRRDDKey extends Tuple2<Integer, String>{
+public class MBRRDDKey extends Tuple2<String, Integer>{
 
 
-	public MBRRDDKey(int _1, String _2) {
+	public MBRRDDKey(String _1, int _2) {
 		super(_1, _2);
 		// TODO Auto-generated constructor stub
 	}
@@ -22,7 +22,7 @@ public class MBRRDDKey extends Tuple2<Integer, String>{
 	
 	@Override
 	public int hashCode() {
-		return this._1 +_2.hashCode();
+		return this._1.hashCode() +_2;
 		
 	}
 

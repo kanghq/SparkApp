@@ -125,6 +125,10 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 		
 	}
 	
+	public int getValidPointCount(Long milSecS,Long milSecE) {
+		return this.tSet.subMap(new Date(milSecS), true, new Date(milSecE), true).size();
+	}
+	
 	
 	public Point getPtSnp(Long milSec) {
 		Point before = getPtSnpBefore(milSec);

@@ -80,7 +80,7 @@ import org.apache.spark.api.java.function.Function;;
 public class GeoSparkHelper {
 
 
-	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int stage) throws Exception {
+	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int margin) throws Exception {
 		JavaPairRDD<MBRRDDKey, MBR> databaseRDD = mbrRDD
 				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, MBRRDDKey, MBR>() {
 					public Iterator<Tuple2<MBRRDDKey, MBR>> call(Tuple2<String, MBRList> t) {
@@ -93,8 +93,8 @@ public class GeoSparkHelper {
 								MBR ele = ite.next();
 								ele.setSeq(Integer.toString(i));
 								ele.setTraID(t._1);
-								MBRRDDKey idx = new MBRRDDKey(i, t._1);
-
+								//MBRRDDKey idx = new MBRRDDKey(i, t._1);
+								MBRRDDKey idx = new MBRRDDKey(t._1, i);
 								list.add(new Tuple2<MBRRDDKey, MBR>(idx, ele));
 								i++;
 							}
@@ -106,11 +106,8 @@ public class GeoSparkHelper {
 					}
 				});
 		JavaPairRDD<MBRRDDKey, MBR> repar = null;
-		if(-2==stage) {
-			long num = databaseRDD.count();
-			throw new Exception("NUMBER="+num);
-		}
-		if(-1!=stage) {
+		
+		
 		long num = databaseRDD.count();
 
 		if(num/300<1) {
@@ -123,15 +120,13 @@ public class GeoSparkHelper {
 			num = num/200-10;
 		}
 		repar = databaseRDD.repartition((int) (num));
-		} else {
-			repar = databaseRDD;
-		}
+		
 
 		
 		
 		return repar;
 	}
-	public static PolygonRDD transformToPolygonRDD(JavaPairRDD<MBRRDDKey, MBR> databaseRDD) {
+	public static PolygonRDD transformToPolygonRDD(JavaPairRDD<MBRRDDKey, MBR> databaseRDD, int margin) {
 		JavaRDD<Polygon> myPolygonRDD = databaseRDD
 				.mapPartitions(new FlatMapFunction<Iterator<Tuple2<MBRRDDKey, MBR>>, Polygon>() {
 
@@ -143,7 +138,8 @@ public class GeoSparkHelper {
 							Tuple2<MBRRDDKey, MBR> tu = t.next();
 							MBR ele = tu._2;
 
-							Polygon pol = ele.shape();
+							Polygon pol = ele.shape(margin);
+							System.out.println(pol+ele.getTraID()+" "+ele.getSeq());
 							String[] property = { "TraID", "Seq", "StartTime", "EndTime", "MBRJSON" };
 							DecimalFormat df = new DecimalFormat("#");
 
@@ -166,14 +162,16 @@ public class GeoSparkHelper {
 		
 		
 
-		PolygonRDD geoPRDD = new PolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY());
+		PolygonRDD geoPRDD = new PolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY_SER());
 
 		try {
 			geoPRDD.spatialPartitioning(GridType.RTREE);
 			geoPRDD.buildIndex(IndexType.RTREE, true);
 
-			geoPRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY());
-			geoPRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY());
+			//geoPRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY_SER());
+			//geoPRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY_SER());
+			geoPRDD.rawSpatialRDD.unpersist();
+			
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -208,8 +206,8 @@ public class GeoSparkHelper {
 	}
 
 
-
-	public static JavaPairRDD retrieve(PolygonRDD geoPRDD, boolean addAll, int stage,JavaPairRDD<MBRRDDKey, MBR> databaseRDD) {
+ 
+	public static JavaPairRDD retrieve(PolygonRDD geoPRDD, boolean addAll, int margin,JavaPairRDD<MBRRDDKey, MBR> databaseRDD) {
 		JavaPairRDD<Polygon, HashSet<Polygon>> joinedRDD = null;
 		try {
 			joinedRDD = JoinQuery.SpatialJoinQuery(geoPRDD, geoPRDD, true, true); //use index, consider !contains only?
@@ -231,8 +229,15 @@ public class GeoSparkHelper {
 				Polygon key = t._1;
 				
 				for(Polygon val:t._2) {
+					if((!((MBRRDDKey) key.getUserData()).equals(((MBRRDDKey) val.getUserData())))&&(!((MBRRDDKey) key.getUserData())._1.equals(((MBRRDDKey) val.getUserData())._1))) {
+							//&&(!((MBRRDDKey) key.getUserData())._1.equals(((MBRRDDKey) val.getUserData())._1))
+					System.out.println(key.getUserData()+" "+key);
+					System.out.println(val.getUserData());
 					if(key.getCoordinates()[4].z>val.getCoordinates()[0].z&&key.getCoordinates()[0].z<val.getCoordinates()[4].z)
+					{
 					list.add(new Tuple2(key,val));
+					}
+					}
 				}
 				
 				}
@@ -333,7 +338,7 @@ public class GeoSparkHelper {
 							Double vol = 0.0;
 							Geometry intersecRes = null;
 							try {
-								Polygon queriedPol = iMBR.shape();
+								Polygon queriedPol = iMBR.shape(margin);
 								String TraID = iMBR.getTraID();
 								String Seq = iMBR.getSeq();
 								Double startTime = iMBR.getTMin();
@@ -343,7 +348,7 @@ public class GeoSparkHelper {
 
 								// System.out.println("Inters Obj"+queriedPol);
 								if (startTime < queryMBR.getTMax() && endTime > queryMBR.getTMin()) {
-									intersecRes = queriedPol.intersection(queryMBR.shape());
+									intersecRes = queriedPol.intersection(queryMBR.shape(margin));
 
 									section = (Polygon) intersecRes;
 									// System.out.println("Inters NEW
@@ -360,27 +365,38 @@ public class GeoSparkHelper {
 									Interval inters = qInterval.overlap(iInterval);
 									Long intStart = inters.getStartMillis();
 									Long intEnd = inters.getEndMillis();
-									Long intMid = (intStart + intEnd) / 2;
-									Point iStart = iMBR.getInsidePoints().getPtSnp(intStart);
-									Point qStart = queryMBR.getInsidePoints().getPtSnp(intStart);
-									Point iMid = iMBR.getInsidePoints().getPtSnp(intMid);
-									Point qMid = queryMBR.getInsidePoints().getPtSnp(intMid);
-									Point iEnd = iMBR.getInsidePoints().getPtSnp(intEnd);
-									Point qEnd = queryMBR.getInsidePoints().getPtSnp(intEnd);
-									Double disStart = iStart.distance(qStart);
-									Double disMid = iMid.distance(qMid);
-									Double disEnd = iEnd.distance(qEnd);
-
-									if (disStart != 0 && disMid != 0 && disEnd != 0
-											&& (disStart < 5 || disMid < 5 || disEnd < 5))
-										collision = true;
+									int roundI = iMBR.getInsidePoints().getValidPointCount(intStart, intEnd);
+									int roundQ = queryMBR.getInsidePoints().getValidPointCount(intStart, intEnd);
+									int round = Math.max(roundI,roundQ);
+									round = Math.max(round, 1);
+									for(int r = 0;r<round;r++) {
+										Long intMid = intStart + (intEnd-intStart)*r / round;
+										Point iStart = iMBR.getInsidePoints().getPtSnp(intStart);
+										Point qStart = queryMBR.getInsidePoints().getPtSnp(intStart);
+										Point iMid = iMBR.getInsidePoints().getPtSnp(intMid);
+										Point qMid = queryMBR.getInsidePoints().getPtSnp(intMid);
+										Point iEnd = iMBR.getInsidePoints().getPtSnp(intEnd);
+										Point qEnd = queryMBR.getInsidePoints().getPtSnp(intEnd);
+										Double disStart = iStart.distance(qStart);
+										Double disMid = iMid.distance(qMid);
+										Double disEnd = iEnd.distance(qEnd);
+									
+										
+										if (disStart != 0 && disMid != 0 && disEnd != 0
+												&& (disStart < margin || disMid < margin || disEnd < margin))
+										{
+											collision = true;
+											break;
+										}
+										}
 
 								}
 								if (true == addAll) {
 									list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
 											new Tuple2(vol, new Tuple2(resultMBR, collision))));
 
-								} else if (collision) {
+								} else if (collision&&TraID.compareTo(queryMBR.getTraID())<0) {
+									
 									list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
 											new Tuple2(vol, new Tuple2(resultMBR, collision))));
 								}
@@ -449,12 +465,7 @@ public class GeoSparkHelper {
 		 * } });
 		 */
 
-		if (1 == stage) {
-			return joinedRDD;
-		}
-		if (2 == stage) {
-			return resultRDD;
-		}
+		
 		return canRDD;
 	}
 

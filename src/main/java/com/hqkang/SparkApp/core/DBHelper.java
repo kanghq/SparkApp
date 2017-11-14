@@ -101,7 +101,7 @@ public class DBHelper {
 	}
 	
 
-	public static JavaPairRDD<Tuple2<Integer, String>, MBR> store2DB(JavaPairRDD<String, MBRList> mbrRDD) {
+	public static JavaPairRDD<Tuple2<Integer, String>, MBR> store2DB(JavaPairRDD<String, MBRList> mbrRDD, int margin) {
 		JavaPairRDD<Tuple2<Integer, String>, MBR> databaseRDD = mbrRDD
 				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, Tuple2<Integer, String>, MBR>() {
 					public Iterator<Tuple2<Tuple2<Integer, String>, MBR>> call(Tuple2<String, MBRList> t) {
@@ -178,7 +178,7 @@ public class DBHelper {
 	}
 
 	public static JavaPairRDD<String, Tuple2<Double, Boolean>> retrieve(String queryFile, JavaSparkContext sc, int k,
-			int part) {
+			int part, int margin) {
 
 		JavaPairRDD<String, MBRList> queRDD = CommonHelper.importFromFile(queryFile, sc, k, part);
 

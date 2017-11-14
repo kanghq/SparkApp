@@ -135,6 +135,26 @@ public class MBR implements Comparable,Serializable{
         return pol;
 	}
 	
+	public Polygon shape(int margin) {
+		Coordinate firstArray[] = new Coordinate[5];
+		double P = 40000000;
+		double degree = margin/P*360;
+		double radians = Math.toRadians(degree);
+		double longMar = degree/Math.cos(radians);
+		
+		
+		firstArray[0] = new Coordinate(this.getXMin()-longMar, this.getYMin()-degree, this.getTMin());
+        firstArray[1] = new Coordinate(this.getXMax()+longMar, this.getYMin()-degree, this.getTMin());
+        firstArray[2] = new Coordinate(this.getXMax()+longMar, this.getYMax()+degree, this.getTMin());
+        firstArray[3] = new Coordinate(this.getXMin()-longMar, this.getYMax()+degree, this.getTMin());
+        firstArray[4] = new Coordinate(this.getXMin()-longMar, this.getYMin()-degree, this.getTMax());
+
+        GeometryFactory gf = new GeometryFactory();
+        LinearRing shell = gf.createLinearRing(firstArray);
+        Polygon pol = gf.createPolygon(shell);
+        return pol;
+	}
+	
 	public String MBR2GeoJson() {
 		GeoJSONWriter writer = new GeoJSONWriter();
 		GeoJSON json = writer.write(shape());

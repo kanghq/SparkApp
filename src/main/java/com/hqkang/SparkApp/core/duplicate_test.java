@@ -56,7 +56,7 @@ public class duplicate_test {
 		// ResourceBundle rb = ResourceBundle.getBundle("Config");
 		String filePath = parser.getIPath();
 		int k = parser.getSegNum();
-		int stage = parser.getStage();
+		int margin = parser.getMargin();
 		boolean SaveAll = parser.getSaveAll();
 		String outputPath = parser.getOPath();
 		int part = parser.getPart();
@@ -163,7 +163,7 @@ public class duplicate_test {
 								MBR ele = ite.next();
 								ele.setSeq(Integer.toString(i));
 								ele.setTraID(t._1);
-								MBRRDDKey idx = new MBRRDDKey(i, t._1);
+								MBRRDDKey idx = new MBRRDDKey(t._1, i);
 
 								list.add(new Tuple2<MBRRDDKey, MBR>(idx, ele));
 								i++;
