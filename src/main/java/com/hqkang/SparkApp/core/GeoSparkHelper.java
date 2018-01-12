@@ -126,6 +126,62 @@ public class GeoSparkHelper {
 		
 		return repar;
 	}
+	public static PolygonRDD transformToPolygonRDDWOPartition(JavaPairRDD<MBRRDDKey, MBR> databaseRDD, int margin) {
+		JavaRDD<Polygon> myPolygonRDD = databaseRDD
+				.mapPartitions(new FlatMapFunction<Iterator<Tuple2<MBRRDDKey, MBR>>, Polygon>() {
+
+					@Override
+					public Iterator<Polygon> call(Iterator<Tuple2<MBRRDDKey, MBR>> t) throws Exception {
+						// TODO Auto-generated method stub
+						ArrayList<Polygon> list = new ArrayList<Polygon>();
+						while (t.hasNext()) {
+							Tuple2<MBRRDDKey, MBR> tu = t.next();
+							MBR ele = tu._2;
+
+							Polygon pol = ele.shape(margin);
+							System.out.println(pol+ele.getTraID()+" "+ele.getSeq());
+							String[] property = { "TraID", "Seq", "StartTime", "EndTime", "MBRJSON" };
+							DecimalFormat df = new DecimalFormat("#");
+
+							// String json =
+							 //Gson.class.newInstance().toJson(ele);
+
+							// String[] propertyField = { ele.getTraID(),
+							// ele.getSeq(), df.format(ele.getTMin()),
+							// df.format(ele.getTMax()), json };
+
+							 //pol.setUserData(ele);
+							 pol.setUserData(tu._1);
+							list.add(pol);
+
+						}
+						return list.iterator();
+
+					}
+				});
+		
+		
+
+		PolygonRDD geoPRDD = new PolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY_SER());
+
+		try {
+			
+			//geoPRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY_SER());
+			//geoPRDD.spatialPartitionedRDD.persist(StorageLevel.MEMORY_ONLY_SER());
+			//geoPRDD.rawSpatialRDD.unpersist();
+			
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return geoPRDD;
+	}
+
+	
+	
+	
 	public static PolygonRDD transformToPolygonRDD(JavaPairRDD<MBRRDDKey, MBR> databaseRDD, int margin) {
 		JavaRDD<Polygon> myPolygonRDD = databaseRDD
 				.mapPartitions(new FlatMapFunction<Iterator<Tuple2<MBRRDDKey, MBR>>, Polygon>() {
@@ -165,7 +221,7 @@ public class GeoSparkHelper {
 		PolygonRDD geoPRDD = new PolygonRDD(myPolygonRDD, StorageLevel.MEMORY_ONLY_SER());
 
 		try {
-			geoPRDD.spatialPartitioning(GridType.RTREE);
+			geoPRDD.spatialPartitioning(GridType.QUADTREE);
 			geoPRDD.buildIndex(IndexType.RTREE, true);
 
 			//geoPRDD.indexedRDD.persist(StorageLevel.MEMORY_ONLY_SER());
@@ -299,6 +355,8 @@ public class GeoSparkHelper {
 		});
 		JavaPairRDD<MBRRDDKey,Tuple2<MBR,MBR>> st4RDD = st3RDD.join(databaseRDD);
 		JavaRDD<Tuple2<MBR,MBR>> st5RDD = st4RDD.values();
+		long cnt = st5RDD.count()/1000+1;
+		st5RDD.repartition((int)cnt);
 
 		
 

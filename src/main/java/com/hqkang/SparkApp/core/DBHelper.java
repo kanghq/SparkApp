@@ -73,7 +73,7 @@ public class DBHelper {
 
 	
 	
-	static void retry(int i, int limit,Connection con, String query) {
+	public static void retry(int i, int limit,Connection con, String query) {
 		try (PreparedStatement stmt = con.prepareStatement(query)) {
 			con.setAutoCommit(false);
 
@@ -177,12 +177,13 @@ public class DBHelper {
 		}
 	}
 
-	public static JavaPairRDD<String, Tuple2<Double, Boolean>> retrieve(String queryFile, JavaSparkContext sc, int k,
+	public static JavaPairRDD<String, Tuple2<Double, Boolean>> retrieve(JavaPairRDD<String, MBRList> queRDD, JavaSparkContext sc, int k,
 			int part, int margin) {
 
-		JavaPairRDD<String, MBRList> queRDD = CommonHelper.importFromFile(queryFile, sc, k, part);
-
 		JavaPairRDD<Tuple2, MBR> queryRDD = CommonHelper.toTupleKey(queRDD);
+
+
+		
 
 		JavaPairRDD<String, Tuple2> resultRDD = queryRDD
 				.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<Tuple2, MBR>>, String, Tuple2>() {

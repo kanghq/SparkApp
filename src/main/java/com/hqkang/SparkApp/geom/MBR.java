@@ -27,8 +27,8 @@ public class MBR implements Comparable,Serializable{
 	
 	public MBR(Point _lt, Point _rb) {
 		
-		this.insidePoints.add(_lt);
-		this.insidePoints.add(_rb);
+		this.insidePoints.add(_lt, false);
+		this.insidePoints.add(_rb, false);
 		this.volume = this.volume();
 	}
 	
@@ -36,7 +36,7 @@ public class MBR implements Comparable,Serializable{
 
 
 	public boolean add(Point pt) {
-		this.insidePoints.add(pt);
+		this.insidePoints.add(pt, false);
 		this.volume = this.volume();
 		return true;
 	}

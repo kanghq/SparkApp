@@ -2,6 +2,7 @@ package com.hqkang.SparkApp.geom;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -25,6 +26,35 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 
 	
 	public boolean add(Point pt) {
+		boolean res = super.add(pt);
+		xSet.put(pt.X(), pt);
+		ySet.put(pt.Y(), pt);
+		tSet.put(pt.T(), pt);
+		return res;
+	}
+	
+	public boolean add(Point pt, boolean resetDate) {
+		if(true == resetDate) {
+			
+			if(0==this.size()) {
+				Date time = pt.getTime();
+				Long milSec = time.getTime();
+				int day = (int) (milSec/8.64e7);
+				milSec = (long) (milSec%8.64e7);
+				Date newTime = new Date(milSec);
+				pt.setTime(newTime);
+			} else {
+				Date time = pt.getTime();
+				Long milSec = time.getTime();
+				Date firstTime = this.first().getTime();
+				int day = (int) (firstTime.getTime()/8.64e7);
+				
+				milSec = (long) (milSec-day*8.64e7);
+				Date newTime = new Date(milSec);
+				pt.setTime(newTime);
+				
+			}
+		}
 		boolean res = super.add(pt);
 		xSet.put(pt.X(), pt);
 		ySet.put(pt.Y(), pt);

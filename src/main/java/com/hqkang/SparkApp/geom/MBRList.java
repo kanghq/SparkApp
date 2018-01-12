@@ -125,7 +125,7 @@ public class MBRList extends java.util.LinkedList<MBR>  {
 		int size = mbrPriList.size();
 		Collections.sort(mbrPriList);
 		Iterator<MBR> mbrIte = mbrPriList.iterator();
-		MBR first = mbrIte.next();
+		//MBR first = mbrIte.next();
 		/*
 		if(first.getInsidePoints().size() == 1){
 			MBR lastOne = null;

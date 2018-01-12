@@ -13,10 +13,15 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.storage.StorageLevel;
+import org.datasyslab.geospark.spatialRDD.LineStringRDD;
 
 import com.hqkang.SparkApp.geom.MBR;
 import com.hqkang.SparkApp.geom.MBRList;
 import com.hqkang.SparkApp.geom.Point;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 
 import scala.Tuple2;
 
@@ -132,6 +137,87 @@ public class CommonHelper {
 		return mbrRDD;
 
 	}
+	
+	public static LineStringRDD importLSTra(String fileName, JavaSparkContext sc, int k, int part) {
+
+		JavaPairRDD<String, String> input = sc.wholeTextFiles(fileName, part);
+		
+		//System.out.println(input.count());
+		//input.repartition(part);
+		JavaPairRDD<String, LinkedList<Coordinate>> points = input
+				.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<String, String>>, String, LinkedList<Coordinate>>() {
+
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public Iterator<Tuple2<String, LinkedList<Coordinate>>> call(Iterator<Tuple2<String, String>> s) {
+						// TODO Auto-generated method stub
+						ArrayList res = new ArrayList();
+						// if(!t._1.endsWith(".plt"))
+						// return res.iterator();
+					while(s.hasNext())
+					{
+						Tuple2<String, String> t = s.next();
+						String text = t._2;
+						LinkedList<Coordinate> ls = new LinkedList<Coordinate>();
+						String line[] = text.split("\n");
+						for (int i = 6; i < line.length; i++) {
+
+							try {
+								String[] parts = line[i].split(",");
+								String lat = parts[0];
+								String lon = parts[1];
+								String sDate = parts[5];
+								Date date;
+								String sTime = parts[6];
+								Date time;
+								
+								Coordinate pt = new Coordinate(Double.parseDouble(lon), Double.parseDouble(lat));
+								
+								ls.add(pt);
+
+							} catch (Exception e) {
+
+							}
+						}
+						res.add(new Tuple2(t._1, ls));
+						
+					}return res.iterator();
+
+					}
+
+	
+
+				});
+		JavaPairRDD<String, LineString> LSRDD = points.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<String, LinkedList<Coordinate>>>, String, LineString>() {
+
+			@Override
+			public Iterator<Tuple2<String, LineString>> call(Iterator<Tuple2<String, LinkedList<Coordinate>>> t)
+					throws Exception {
+				// TODO Auto-generated method stub
+				ArrayList<Tuple2<String,LineString>> list = new ArrayList<Tuple2<String,LineString>>();
+				while(t.hasNext())
+				{
+				Tuple2 s = t.next();
+				LinkedList<Coordinate> lst = (LinkedList<Coordinate>) s._2;
+				LineString ls = new GeometryFactory().createLineString(lst.toArray(new Coordinate[lst.size()] ));
+				list.add(new Tuple2(s._1,ls));
+				}
+				return list.iterator();
+			}
+			
+		});
+		LineStringRDD lsrdd = new LineStringRDD(LSRDD.values(),StorageLevel.MEMORY_ONLY_SER());
+
+		
+			return lsrdd;
+
+
+	}
+	
 	
 	public static JavaPairRDD<Tuple2, MBR> toTupleKey(JavaPairRDD<String, MBRList> mbrRDD) {
 		JavaPairRDD<Tuple2, MBR> databaseRDD = mbrRDD

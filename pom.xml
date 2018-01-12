@@ -98,7 +98,12 @@
 	<dependency>
     	<groupId>org.datasyslab</groupId>
     	<artifactId>geospark</artifactId>
-    	<version>0.6.1-snapshot</version>
+    	<version>0.8.2</version>
+	</dependency>
+		<dependency>
+    	<groupId>org.datasyslab</groupId>
+    	<artifactId>babylon</artifactId>
+    	<version>0.2.1-hq</version>
 	</dependency>
 
     <dependency>
@@ -169,6 +174,7 @@
   
   <build>
   <plugins>
+  
    <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -191,8 +197,31 @@
 			                </includes>
 			              </artifactSet>
                         <transformers>
-
+                          <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                          <manifestEntries>
+                          
+                            <Specification-Title>Java Advanced Imaging Image I/O Tools</Specification-Title>
+						    <Specification-Version>1.1</Specification-Version>
+						    <Specification-Vendor>Sun Microsystems, Inc.</Specification-Vendor>
+						    <Implementation-Title>com.sun.media.imageio</Implementation-Title>
+						    <Implementation-Version>1.1</Implementation-Version>
+						    <Implementation-Vendor>Sun Microsystems, Inc.</Implementation-Vendor>
+                        <Build-Number>123</Build-Number>
+                        </manifestEntries>
+                     </transformer>
+  
                         </transformers>
+                        <filters>
+                            <!--  filter to address "Invalid signature file" issue - see http://stackoverflow.com/a/6743609/589215-->
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/*.SF</exclude>
+                                    <exclude>META-INF/*.DSA</exclude>
+                                    <exclude>META-INF/*.RSA</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>   
                     </configuration>
                 </execution>
             </executions>
