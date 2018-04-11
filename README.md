@@ -1,4 +1,31 @@
-# SparkApp
+# Trajectory Segmentation and Similarity Estimation Using Spark
+
+
+This is a demo application for trajectory segmentation and similarity estimation. Its's based on Spark and Neo4J Graph Database. 
+
+## Highlights
+
+ 1. Using Spark for parallelism.
+ 2. Using JTS topology Library to calculate two trajectory similarity.
+ 3. Support Neo4j Spatial to persist trajectory segmentation.
+
+
+## Building
+
+The simplest way to build Neo4j Spatial is by using maven. Just clone the git repository and run
+
+    mvn install
+
+This will download all dependencies, compiled the library, run the tests and install the artifact in your local repository. The application be created in the  `target`  directory, and can be copied to your local server or upload to AWS for execution.
+
+
+## deployment into AWS
+
+we recommend using EMR as Spark Environment.
+
+
+Paper:
+
 
 
 
