@@ -25,6 +25,8 @@ we recommend using EMR as Spark Environment.
 
 Software Version:emr-5.5.1
 
+P.S. Please make sure you have enough disk space. 300GB or more for each node
+
 Paper:
 
 
