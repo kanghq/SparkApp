@@ -23,6 +23,7 @@ This will download all dependencies, compiled the library, run the tests and ins
 
 we recommend using EMR as Spark Environment.
 
+Software Version:emr-5.5.1
 
 Paper:
 
