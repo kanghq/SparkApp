@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -70,6 +71,8 @@ import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
 import scala.Tuple2;
 import scala.Tuple3;
+import scala.Tuple4;
+import scala.Tuple5;
 
 import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix;
 import org.apache.spark.mllib.linalg.distributed.MatrixEntry;
@@ -80,7 +83,7 @@ import org.apache.spark.api.java.function.Function;;
 public class GeoSparkHelper {
 
 
-	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int margin) throws Exception {
+	public static JavaPairRDD<MBRRDDKey, MBR> toDBRDD(JavaPairRDD<String, MBRList> mbrRDD, int margin, int part) throws Exception {
 		JavaPairRDD<MBRRDDKey, MBR> databaseRDD = mbrRDD
 				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, MBRList>, MBRRDDKey, MBR>() {
 					public Iterator<Tuple2<MBRRDDKey, MBR>> call(Tuple2<String, MBRList> t) {
@@ -108,18 +111,10 @@ public class GeoSparkHelper {
 		JavaPairRDD<MBRRDDKey, MBR> repar = null;
 		
 		
-		long num = databaseRDD.count();
+		//long num = databaseRDD.count();
 
-		if(num/300<1) {
-			num = 1;
-		} 
-		/*else if(num/300>2500) {
-			num = 2500;
-		} 
-		*/else {
-			num = num/200-10;
-		}
-		repar = databaseRDD.repartition((int) (num));
+		
+		repar = databaseRDD.repartition((int) (part));
 		
 
 		
@@ -360,15 +355,15 @@ public class GeoSparkHelper {
 
 		
 
-		JavaPairRDD<String, Tuple2> resultRDD = st5RDD
-				.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<MBR,MBR>>,String,Tuple2>() {
+		JavaPairRDD<String, Tuple5> resultRDD = st5RDD
+				.mapPartitionsToPair(new PairFlatMapFunction<Iterator<Tuple2<MBR,MBR>>,String,Tuple5>() {
 
 					@Override
-					public Iterator<Tuple2<String, Tuple2>> call(Iterator<Tuple2<MBR, MBR>> s) throws Exception {
+					public Iterator<Tuple2<String, Tuple5>> call(Iterator<Tuple2<MBR, MBR>> s) throws Exception {
 																															// Auto-generated
 																															// method
 																															// stub
-						ArrayList<Tuple2<String, Tuple2>> list = new ArrayList<Tuple2<String, Tuple2>>();
+						ArrayList<Tuple2<String, Tuple5>> list = new ArrayList<Tuple2<String, Tuple5>>();
 						/*
 						Polygon queryPolygon = t._1;
 						 JSONParser parser = new JSONParser();
@@ -386,7 +381,7 @@ public class GeoSparkHelper {
 						 while(s.hasNext())
 						 {
 							 Tuple2<MBR, MBR>	 t=s.next();
-						 MBR queryMBR = t._1;
+							 MBR queryMBR = t._1;
 						 	//Polygon rs = t._2;
 							 //String mbrjson = (String) rs.getUserData();
 							 MBR iMBR = t._2;
@@ -403,6 +398,7 @@ public class GeoSparkHelper {
 								Double endTime = iMBR.getTMax();
 								Tuple2 resultMBR = new Tuple2(Seq, TraID);
 								boolean collision = false;
+								Long chkTime = -1L;
 
 								// System.out.println("Inters Obj"+queriedPol);
 								if (startTime < queryMBR.getTMax() && endTime > queryMBR.getTMin()) {
@@ -429,6 +425,7 @@ public class GeoSparkHelper {
 									round = Math.max(round, 1);
 									for(int r = 0;r<round;r++) {
 										Long intMid = intStart + (intEnd-intStart)*r / round;
+										chkTime = intMid;
 										Point iStart = iMBR.getInsidePoints().getPtSnp(intStart);
 										Point qStart = queryMBR.getInsidePoints().getPtSnp(intStart);
 										Point iMid = iMBR.getInsidePoints().getPtSnp(intMid);
@@ -451,12 +448,12 @@ public class GeoSparkHelper {
 								}
 								if (true == addAll) {
 									list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
-											new Tuple2(vol, new Tuple2(resultMBR, collision))));
+											new Tuple5(vol,chkTime, queryMBR.getTraID(), iMBR.getTraID(), collision)));
 
 								} else if (collision&&TraID.compareTo(queryMBR.getTraID())<0) {
 									
 									list.add(new Tuple2("QT:" + queryMBR.getTraID() + "," + TraID,
-											new Tuple2(vol, new Tuple2(resultMBR, collision))));
+											new Tuple5(vol,chkTime, queryMBR.getTraID(), iMBR.getTraID(), collision)));
 								}
 
 							} catch (ClassCastException | IllegalArgumentException e) {
@@ -480,49 +477,102 @@ public class GeoSparkHelper {
 				});
 
 		// resultRDD.count();
+		
+		
+		
+		
+		JavaPairRDD<String, Tuple5> canRDD = resultRDD.aggregateByKey(
+				new Tuple5(new Double(0.0),new ArrayList<Long>(),"","", new Boolean(false)),
+				new Function2<Tuple5, Tuple5, Tuple5>() {
 
-		JavaPairRDD<String, Tuple2<Double, Boolean>> canRDD = resultRDD.aggregateByKey(
-				new Tuple2(new Double(0.0), new Boolean(false)),
-				new Function2<Tuple2<Double, Boolean>, Tuple2, Tuple2<Double, Boolean>>() {
-
-					public Tuple2<Double, Boolean> call(Tuple2<Double, Boolean> v1, Tuple2 v2) throws Exception {
+					public Tuple5 call(Tuple5 v1, Tuple5 v2) throws Exception {
 						// TODO Auto-generated method stub
-						Tuple2<Double, Tuple2> newv2 = (Tuple2<Double, Tuple2>) v2;
-						Double val = v1._1;
-						Boolean bval = v1._2;
-						val = (Double) v2._1 + val;
-						bval = bval || (Boolean) newv2._2._2;
-						return new Tuple2<Double, Boolean>(val, bval);
+					
+						Double val = (Double) v1._1();
+						Boolean bval = (Boolean) v1._5();
+						val = ((Double) v2._1()) + val;
+						bval = bval || (Boolean) v2._5();
+						
+						ArrayList list = (ArrayList) v1._2();
+						Long timeStmp = (Long) v2._2();
+						list.add(timeStmp);
+						String trID1 = (String) v2._3();
+						String trID2 = (String) v2._4();
+						
+						
+						return new Tuple5(val,list,trID1,trID2,bval);
+						
 					}
 
-				}, new Function2<Tuple2<Double, Boolean>, Tuple2<Double, Boolean>, Tuple2<Double, Boolean>>() {
 
-					@Override
-					public Tuple2<Double, Boolean> call(Tuple2<Double, Boolean> v1, Tuple2<Double, Boolean> v2)
-							throws Exception {
+				}, new Function2<Tuple5, Tuple5, Tuple5>() {
+
+					public Tuple5 call(Tuple5 v1, Tuple5 v2) throws Exception {
 						// TODO Auto-generated method stub
-						Double val = v1._1;
-						Double val2 = v2._1;
-						Boolean bval = v1._2;
-						Boolean bval2 = v2._2;
-						val = val + val2;
-						bval = bval || bval2;
-						return new Tuple2<Double, Boolean>(val, bval);
+					
+						Double val = (Double) v1._1();
+						Boolean bval = (Boolean) v1._5();
+						val = ((Double) v2._1()) + val;
+						bval = bval || (Boolean) v2._5();
+						
+						ArrayList list = (ArrayList) v1._2();
+						ArrayList list2 = (ArrayList) v2._2();
+						list.addAll(list2);
+						String trID1 = (String) v2._3();
+						String trID2 = (String)  v2._4();
+						
+						
+						return new Tuple5(val,list,trID1,trID2,bval);
+						
 					}
+
 
 				});
 
+		
 		/*
-		 * canRDD.foreach(new VoidFunction<Tuple2<String, Tuple2<Double,
-		 * Boolean>>>() {
-		 * 
-		 * @Override public void call(Tuple2<String, Tuple2<Double, Boolean>> t)
-		 * throws Exception { // TODO Auto-generated method stub
-		 * System.out.println(t._1 + "," + t._2._1 + "," + t._2._2);
-		 * 
-		 * } });
-		 */
+		  neo4j gathering finder method
+		 
+		
+		canRDD.foreach(new VoidFunction<Tuple2<String, Tuple5>>() {
 
+			@Override
+			public void call(Tuple2<String, Tuple5> t) throws Exception {
+				// TODO Auto-generated method stub
+				Connection con = DriverManager.getConnection("jdbc:neo4j:bolt://" + "localhost", "spark","25519173");
+				if((boolean) t._2._5()) {
+					ArrayList<Long> colStmps = (ArrayList<Long>) ((Tuple5) t._2)._2();
+					for(Long item:colStmps) {
+						String tra1 = (String) t._2._3();
+						tra1 = tra1.substring(tra1.lastIndexOf("/")+1);
+						String tra2 = (String) t._2._4();
+						tra2 = tra2.substring(tra2.lastIndexOf("/")+1);
+						String query = "match (n:Trajectory),(m:Trajectory) where m.ID=\""+tra1+"\" and n.ID = \""+tra2+"\" merge (n)-[r:Collision{time:"+item+"}]->(m)";
+						DBHelper.retry(0, 3, con, query);
+						System.out.println(query);
+
+					}
+				}
+				
+			}
+			
+		});
+	
+		*/
+		
+		/*
+		 * Console printout
+		 */
+		/*
+		  canRDD.foreach(new VoidFunction<Tuple2<String, Tuple5>>() {
+		  
+		  @Override public void call(Tuple2<String, Tuple5> t)
+		  throws Exception { // TODO Auto-generated method stub
+		  System.out.println(t._1 + "," + t._2 );
+		  
+		  } });
+		 */
+		
 		
 		return canRDD;
 	}

@@ -146,11 +146,14 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 	
 	public Point getPtSnpBefore(Long milSec) {
 		SortedMap<Date, Point> subMap = this.tSet.subMap(new Date(0), true, new Date(milSec), true);
+		if(subMap.isEmpty()) return null;
 		return subMap.get(subMap.lastKey());
 		
 	}
 	public Point getPtSnpAfter(Long milSec) {
 		SortedMap<Date, Point> subMap = this.tSet.subMap(new Date(milSec), true, new Date(), true);
+		if(subMap.isEmpty()) return null;
+
 		return subMap.get(subMap.firstKey());
 		
 	}
@@ -163,10 +166,11 @@ public class PointSet extends LinkedHashSet<Point> implements Serializable{
 	public Point getPtSnp(Long milSec) {
 		Point before = getPtSnpBefore(milSec);
 		Point after = getPtSnpAfter(milSec);
+		if(before==null || after==null) return null;
 		if(before.getTime().equals(after.getTime())) {
 			return after;
 		} else {
-			
+			// todo if snp time is not exist
 			Date dt = new Date(milSec);
 			double bft = before.getTime().getTime();
 			double aft = after.getTime().getTime();

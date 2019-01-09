@@ -1,41 +1,41 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.hqkang</groupId>
-  <artifactId>SparkApp</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <groupId>com.hqkang</groupId>
+    <artifactId>SparkApp</artifactId>
+    <version>2.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-  <name>SparkApp</name>
-  <url>http://maven.apache.org</url>
-	
-  <repositories>
-  <repository>
-    <id>SparkPackagesRepo</id>
-    <url>http://dl.bintray.com/spark-packages/maven</url>
-  </repository>
-    <repository>
-      <id>Akka repository</id>
-      <url>http://repo.akka.io/releases</url>
-    </repository>
-    <repository>
-      <id>scala-tools</id>
-      <url>https://oss.sonatype.org/content/groups/scala-tools</url>
-    </repository>
-    <repository>
-      <id>apache</id>
-      <url>https://repository.apache.org/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <id>twitter</id>
-      <url>http://maven.twttr.com/</url>
-    </repository>
-    <repository>
-      <id>central2</id>
-      <url>http://central.maven.org/maven2/</url>
-    </repository>
-    <repository>
+    <name>SparkApp</name>
+    <url>http://maven.apache.org</url>
+
+    <repositories>
+        <repository>
+            <id>SparkPackagesRepo</id>
+            <url>http://dl.bintray.com/spark-packages/maven</url>
+        </repository>
+        <repository>
+            <id>Akka repository</id>
+            <url>http://repo.akka.io/releases</url>
+        </repository>
+        <repository>
+            <id>scala-tools</id>
+            <url>https://oss.sonatype.org/content/groups/scala-tools</url>
+        </repository>
+        <repository>
+            <id>apache</id>
+            <url>https://repository.apache.org/content/repositories/releases</url>
+        </repository>
+        <repository>
+            <id>twitter</id>
+            <url>http://maven.twttr.com/</url>
+        </repository>
+        <repository>
+            <id>central2</id>
+            <url>http://central.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>neo4j-contrib-releases</id>
             <url>https://raw.github.com/neo4j-contrib/m2/master/releases</url>
             <releases>
@@ -55,186 +55,191 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-  </repositories>
-   
-  <dependencies>
- 
+    </repositories>
 
-<!-- https://mvnrepository.com/artifact/org.datasyslab/JTSplus -->
-<dependency>
-    <groupId>org.datasyslab</groupId>
-    <artifactId>JTSplus</artifactId>
-    <version>0.1.3</version>
-</dependency>
-  
+    <dependencies>
 
-	<dependency>
-        <groupId>org.neo4j</groupId>
-        <artifactId>neo4j-spatial</artifactId>
-        <version>0.19-neo4j-3.0.3</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib_2.10 -->
-<dependency>
-    <groupId>org.apache.spark</groupId>
-    <artifactId>spark-mllib_2.11</artifactId>
-    <version>2.0.1</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
 
-    
-   
-    <dependency> <!-- Spark dependency -->
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.11</artifactId>
-      <version>2.0.1</version>
+        <!-- https://mvnrepository.com/artifact/org.datasyslab/JTSplus -->
+        <dependency>
+            <groupId>org.datasyslab</groupId>
+            <artifactId>JTSplus</artifactId>
+            <version>0.1.3</version>
+        </dependency>
 
-    </dependency>
-    <dependency> <!-- Spark dependency -->
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-sql_2.11</artifactId>
-      <version>2.0.1</version>
-    </dependency>
-	 <!-- https://mvnrepository.com/artifact/org.datasyslab/geospark -->
-	<dependency>
-    	<groupId>org.datasyslab</groupId>
-    	<artifactId>geospark</artifactId>
-    	<version>0.8.2</version>
-	</dependency>
-		<dependency>
-    	<groupId>org.datasyslab</groupId>
-    	<artifactId>babylon</artifactId>
-    	<version>0.2.1-hq</version>
-	</dependency>
 
-    <dependency>
-    	<groupId>org.neo4j</groupId>
-    	<artifactId>neo4j</artifactId>
-    	<version>3.1.0</version>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-spatial</artifactId>
+            <version>0.19-neo4j-3.0.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib_2.10 -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.11</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
 
-    </dependency>
-    <dependency>
-    	<groupId>com.esotericsoftware</groupId>
-    	<artifactId>kryo-shaded</artifactId>
-    	<version>3.0.3</version>
-    </dependency>
-    <dependency>
-    	<groupId>org.neo4j.driver</groupId>
-    	<artifactId>neo4j-java-driver</artifactId>
-    	<version>1.0.6</version>
-    </dependency>
 
-    <dependency>
-    	<groupId>junit</groupId>
-    	<artifactId>junit</artifactId>
-    	<version>3.8.2</version>
-    </dependency>
-    <dependency>
-    <groupId>org.neo4j</groupId>
-    <artifactId>neo4j-jdbc-driver</artifactId>
-    <version>3.0.1</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
-<dependency>
-    <groupId>joda-time</groupId>
-    <artifactId>joda-time</artifactId>
-    <version>2.9.7</version>
-</dependency>
-    <dependency>
-    <groupId>neo4j-contrib</groupId>
-    <artifactId>neo4j-spark-connector</artifactId>
-    <version>2.0.0-M2</version>
-  </dependency>
-<!-- https://mvnrepository.com/artifact/net.sf.flexjson/flexjson -->
-<dependency>
-    <groupId>net.sf.flexjson</groupId>
-    <artifactId>flexjson</artifactId>
-    <version>2.0</version>
-</dependency>
-<dependency>  
-            <groupId>com.alibaba</groupId>  
-            <artifactId>fastjson</artifactId>  
-            <version>1.2.15</version>  
-</dependency>
-<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-<dependency>
-    <groupId>com.google.code.gson</groupId>
-    <artifactId>gson</artifactId>
-    <version>2.8.0</version>
-</dependency>
+        <dependency> <!-- Spark dependency -->
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.11</artifactId>
+            <version>2.0.1</version>
 
-  </dependencies>
-  <properties>
-    <java.version>1.8</java.version>
-    <neo4j.version>3.1</neo4j.version>
-    <scala.binary.version>2.10</scala.binary.version>
-  
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.wololo/jts2geojson -->
+        <dependency>
+            <groupId>org.wololo</groupId>
+            <artifactId>jts2geojson</artifactId>
+            <version>0.3.1</version>
+        </dependency>
 
-  
-  <build>
-  <plugins>
-  
-   <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>shade</goal>
-            </goals>
+        <dependency> <!-- Spark dependency -->
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.11</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.datasyslab/geospark -->
+        <dependency>
+            <groupId>org.datasyslab</groupId>
+            <artifactId>geospark</artifactId>
+            <version>0.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.11.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datasyslab</groupId>
+            <artifactId>babylon</artifactId>
+            <version>0.2.1-hq</version>
+        </dependency>
 
-                    <configuration>
-              	       <shadedArtifactAttached>true</shadedArtifactAttached>
-              		    <shadedClassifierName>all</shadedClassifierName>
-           			   <minimizeJar>false</minimizeJar>
-              			<createDependencyReducedPom>false</createDependencyReducedPom>
-			              <artifactSet>
-			                <includes>
-			                 
-			                  <include>*:*</include>
-			                </includes>
-			              </artifactSet>
-                        <transformers>
-                          <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                          <manifestEntries>
-                          
-                            <Specification-Title>Java Advanced Imaging Image I/O Tools</Specification-Title>
-						    <Specification-Version>1.1</Specification-Version>
-						    <Specification-Vendor>Sun Microsystems, Inc.</Specification-Vendor>
-						    <Implementation-Title>com.sun.media.imageio</Implementation-Title>
-						    <Implementation-Version>1.1</Implementation-Version>
-						    <Implementation-Vendor>Sun Microsystems, Inc.</Implementation-Vendor>
-                        <Build-Number>123</Build-Number>
-                        </manifestEntries>
-                     </transformer>
-  
-                        </transformers>
-                        <filters>
-                            <!--  filter to address "Invalid signature file" issue - see http://stackoverflow.com/a/6743609/589215-->
-                            <filter>
-                                <artifact>*:*</artifact>
-                                <excludes>
-                                    <exclude>META-INF/*.SF</exclude>
-                                    <exclude>META-INF/*.DSA</exclude>
-                                    <exclude>META-INF/*.RSA</exclude>
-                                </excludes>
-                            </filter>
-                        </filters>   
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-      <plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
-	</plugin>
-	</plugins>
-  </build>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j</artifactId>
+            <version>3.1.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo-shaded</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>1.0.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-jdbc-driver</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.9.7</version>
+        </dependency>
+        <dependency>
+            <groupId>neo4j-contrib</groupId>
+            <artifactId>neo4j-spark-connector</artifactId>
+            <version>2.0.0-M2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/net.sf.flexjson/flexjson -->
+        <dependency>
+            <groupId>net.sf.flexjson</groupId>
+            <artifactId>flexjson</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.15</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>all</shadedClassifierName>
+                            <minimizeJar>false</minimizeJar>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <artifactSet>
+                                <includes>
+
+                                    <include>*:*</include>
+                                </includes>
+                            </artifactSet>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+
+                                        <Specification-Title>Java Advanced Imaging Image I/O Tools</Specification-Title>
+                                        <Specification-Version>1.1</Specification-Version>
+                                        <Specification-Vendor>Sun Microsystems, Inc.</Specification-Vendor>
+                                        <Implementation-Title>com.sun.media.imageio</Implementation-Title>
+                                        <Implementation-Version>1.1</Implementation-Version>
+                                        <Implementation-Vendor>Sun Microsystems, Inc.</Implementation-Vendor>
+                                        <Build-Number>123</Build-Number>
+                                    </manifestEntries>
+                                </transformer>
+
+                            </transformers>
+                            <filters>
+                                <!--  filter to address "Invalid signature file" issue - see http://stackoverflow.com/a/6743609/589215-->
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

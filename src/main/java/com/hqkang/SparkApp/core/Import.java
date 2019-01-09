@@ -1,13 +1,5 @@
 package com.hqkang.SparkApp.core;
 
-import java.io.File;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -18,13 +10,6 @@ import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.SparkSession.Builder;
 import org.apache.spark.storage.StorageLevel;
-import org.datasyslab.babylon.core.ImageGenerator;
-import org.datasyslab.babylon.extension.imageGenerator.BabylonImageGenerator;
-import org.datasyslab.babylon.extension.visualizationEffect.HeatMap;
-import org.datasyslab.babylon.utils.ImageType;
-import org.datasyslab.geospark.enums.IndexType;
-import org.datasyslab.geospark.spatialOperator.JoinQuery;
-import org.datasyslab.geospark.spatialRDD.LineStringRDD;
 import org.datasyslab.geospark.spatialRDD.PolygonRDD;
 
 import com.hqkang.SparkApp.cli.GeoSparkParser;
@@ -32,11 +17,10 @@ import com.hqkang.SparkApp.cli.SubmitParser;
 import com.hqkang.SparkApp.geom.MBR;
 import com.hqkang.SparkApp.geom.MBRList;
 import com.hqkang.SparkApp.geom.MBRRDDKey;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Polygon;
 
 import scala.Tuple2;
+
+
 
 public class Import {
 
@@ -78,7 +62,7 @@ public class Import {
 		//LineStringRDD myLSRDD = CommonHelper.importLSTra(filePath, sc, k, part);
 		//System.out.println(myLSRDD.countWithoutDuplicates());
 		
-		JavaPairRDD<MBRRDDKey, MBR> dbrdd = GeoSparkHelper.toDBRDD(mbrRDD, margin);
+		JavaPairRDD<MBRRDDKey, MBR> dbrdd = GeoSparkHelper.toDBRDD(mbrRDD, margin, part);
 		dbrdd.persist(StorageLevel.MEMORY_ONLY_SER());
 		String currentPath = outputPath+System.currentTimeMillis()+"/";
 		

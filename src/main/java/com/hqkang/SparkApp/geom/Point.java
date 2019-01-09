@@ -25,7 +25,7 @@ public class Point  implements Serializable, Comparable{
 		
 	}
 	
-	Point(double _lat, double _lon) {
+	public Point(double _lat, double _lon) {
 		latitude = _lat;
 		longitude = _lon;
 	}

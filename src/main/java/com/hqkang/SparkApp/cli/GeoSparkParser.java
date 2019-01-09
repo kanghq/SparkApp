@@ -4,16 +4,20 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 public class GeoSparkParser extends SubmitParser {
+	
+	/*
+	 * z = debug option 
+	 */
 
 	private int z = 0;
-	Option stage = OptionBuilder.withArgName("Int").hasArg().withDescription("Debug stage").create("z");
+	Option margin = OptionBuilder.withArgName("Int").hasArg().withDescription("Margin of MBR").create("z");
 
 
 	public GeoSparkParser(String[] args) {
 		
 		super(args);
 		// TODO Auto-generated constructor stub
-		super.options.addOption(stage);
+		super.options.addOption(margin);
     	options.addOption("y", false, "Save All");
     	
     	options.addOption("j", false, "Stat Switch");

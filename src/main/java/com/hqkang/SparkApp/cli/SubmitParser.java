@@ -10,6 +10,13 @@ public class SubmitParser {
     protected CommandLineParser parser = new BasicParser();
     protected CommandLine cmd = null;
     
+    /*
+     * i - input path
+     * o - output path
+     * s - segmentation mnumber
+     * p - space partition number
+     */
+    
     String iPath = "";
     String oPath = "";
     int k = 20;
