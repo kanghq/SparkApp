@@ -8,6 +8,11 @@ This is a demo application for trajectory segmentation and similarity estimation
  1. Using Spark for parallelism.
  2. Using JTS topology Library to calculate two trajectory similarity.
  3. Support Neo4j Spatial to persist trajectory segmentation.
+ 
+ More info:
+ https://github.com/kanghq/SparkApp/blob/master/cuthesis.pdf
+            https://github.com/kanghq/SparkApp/blob/master/pres.pdf
+            https://github.com/kanghq/SparkApp/blob/master/IEEE_Tran_jrnl.pdf
 
 
 ## Building
