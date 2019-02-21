@@ -1,4 +1,4 @@
-#Trajectory Segmentation and Similarity Estimation Using Spark
+# Trajectory Segmentation and Similarity Estimation Using Spark
 
 
 This is a demo application for trajectory segmentation and similarity estimation. Its's based on Spark and Neo4J Graph Database. 
