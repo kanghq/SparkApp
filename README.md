@@ -1,18 +1,24 @@
-# Trajectory Segmentation and Similarity Estimation Using Spark
+Trajectory Segmentation and Similarity Estimation Using Spark
 
 
 This is a demo application for trajectory segmentation and similarity estimation. Its's based on Spark and Neo4J Graph Database. 
 
-## Highlights
+## Algorithms
+- Greedy-Split to segment trajectories into Minimum Bounding Rectangles(MBRs).
+- Quad-tree repartitioing strategy to distribute MBRs.
+- In-memory or external Nosql R-tree indexing.
+- Multiple query metrics support.
 
- 1. Using Spark for parallelism.
- 2. Using JTS topology Library to calculate two trajectory similarity.
- 3. Support Neo4j Spatial to persist trajectory segmentation.
+## Highlights
+ - Using Spark for parallelism.
+ - Using JTS topology Library to calculate two trajectory similarity.
+ - Support Neo4j Spatial to persist trajectory segmentations.
  
  More info:
- https://github.com/kanghq/SparkApp/blob/master/cuthesis.pdf
-            https://github.com/kanghq/SparkApp/blob/master/pres.pdf
-            https://github.com/kanghq/SparkApp/blob/master/IEEE_Tran_jrnl.pdf
+
+- [Master Thesis](https://github.com/kanghq/SparkApp/blob/master/cuthesis.pdf)
+- [Slides](https://github.com/kanghq/SparkApp/blob/master/pres.pdf)
+- [Under Review Journal Paper](https://github.com/kanghq/SparkApp/blob/master/IEEE_Tran_jrnl.pdf)
 
 
 ## Building
@@ -32,16 +38,10 @@ Software Version:emr-5.5.1
 
 P.S. Please make sure you have enough disk space. 300GB or more for each node
 
-Paper:
-
-
-
-
+Submit job:
 `spark-submit --deploy-mode cluster \
-    --conf "spark.executor.extraJavaOptions=-Djava.awt.headless=true -Dawt.toolkit=sun.awt.HToolkit" \  
-    --conf "spark.driver.extraJavaOptions=-Djava.awt.headless=true -Dawt.toolkit=sun.awt.HToolkit" \  
-    --executor-memory 40g --conf spark.yarn.executor.memoryOverhead=10g --class com.hqkang.SparkApp.core.Import s3://i-09fa3a04098d2f26b/test.jar \  
-    -i s3://i-09fa3a04098d2f26b/1G/*/*/* -o s3://i-09fa3a04098d2f26b-output/quadtree/ -s 20 -p 5000 -z 10`
+    --class com.hqkang.SparkApp.core.Import s3://path_of_application/application.jar \  
+    -i s3://path_to_geolife_trajectories/ -o s3://path_to_output_dir/ -s 20 -p 5000 -z 10`
     
     
     
@@ -52,3 +52,20 @@ Paper:
     -p Data load initial partition number
     -s Trajectory Segmentation number
     
+
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+A
+
+
